@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "outFile": "src/bundle.js",
+    "lib": ["ESNext", "DOM"],
+    "target": "ESNext"
+  },
+  "include": ["src/**/*.ts"]
+}
