@@ -27,6 +27,7 @@ class Rectangle extends Shape {
   ) {
     super(transform);
     this.initVertices();
+    this.needUpdate = true;
   }
 
   initVertices() {
@@ -48,12 +49,14 @@ class Rectangle extends Shape {
     const factor = value / this._length;
     this._vertices.forEach((v) => v.scaleX(factor));
     this._length = value;
+    this.needUpdate = true;
   }
 
   set width(value: number) {
     const factor = value / this._width;
     this._vertices.forEach((v) => v.scaleY(factor));
     this._width = value;
+    this.needUpdate = true;
   }
 
   onVertexChanged(vertex: Vertex) {
@@ -70,6 +73,7 @@ class Rectangle extends Shape {
       let converter = Rectangle.getMultiplier(i as Quadrant);
       vertex.position.set(Vector2.multiplyEach(vertex.position, converter));
     }
+    this.needUpdate = true;
   }
 
   drawMode(context: WebGLRenderingContext) {

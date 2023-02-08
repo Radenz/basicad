@@ -7,12 +7,18 @@ abstract class Shape {
   protected highlight: boolean = false;
   protected hidden: boolean = false;
 
+  protected dataCache: number[] = [];
+  protected needUpdate: boolean = false;
+
   constructor(readonly transform: Transform) {}
 
   abstract drawMode(context: WebGLRenderingContext): number;
 
   get data(): number[] {
-    return this._vertices.map((v) => v.data).flat();
+    if (this.needUpdate)
+      this.dataCache = this._vertices.map((v) => v.data).flat();
+    this.needUpdate = false;
+    return this.dataCache;
   }
 
   get isHighlighted(): boolean {
@@ -41,23 +47,28 @@ abstract class Shape {
 
   rotate(angle: number) {
     this.transform.rotation += angle;
+    this.needUpdate = true;
   }
 
   translate(distance: Vector2) {
     this.transalteX(distance.x);
     this.transalteY(distance.y);
+    this.needUpdate = true;
   }
 
   transalteX(distance: number) {
     this.transform.position.x += distance;
+    this.needUpdate = true;
   }
 
   transalteY(distance: number) {
     this.transform.position.y += distance;
+    this.needUpdate = true;
   }
 
   scale(factor: number) {
     this.transform.scale *= factor;
+    this.needUpdate = true;
   }
 }
 

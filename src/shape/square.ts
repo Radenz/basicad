@@ -8,6 +8,7 @@ class Square extends Shape {
   constructor(transform: Transform, private _size: number) {
     super(transform);
     this.initVertices();
+    this.needUpdate = true;
   }
 
   initVertices() {
@@ -36,6 +37,7 @@ class Square extends Shape {
       // ? Nullify change listener so change listeners loop doesn't occur
       vertex.position.set(position);
     }
+    this.needUpdate = true;
   }
 
   override drawMode(context: WebGLRenderingContext) {
@@ -50,6 +52,7 @@ class Square extends Shape {
     const factor = value / this._size;
     this._vertices.forEach((v) => v.scale(factor));
     this._size = value;
+    this.needUpdate = true;
   }
 }
 

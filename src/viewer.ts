@@ -11,8 +11,8 @@ import {
   CLEAR_COLOR,
   COLOR_SIZE,
   FLOAT_SIZE,
-  FRAME_DELTA_TIME,
   G,
+  Nullable,
   ORANGE,
   PARENT_POSITION_INDEX,
   PARENT_ROTATION_INDEX,
@@ -24,11 +24,14 @@ import {
 } from "./util";
 
 type ViewMode = "solid" | "wireframe";
+type Mode = "object" | "edit";
 
 class Viewer {
   private context: WebGLRenderingContext;
   private shapes: Shape[];
   private viewMode: ViewMode = "solid";
+  private mode: Mode = "object";
+  private selected: Nullable<Shape> = null;
 
   constructor(canvas: HTMLCanvasElement) {
     // TODO: Try other contex, add guard
@@ -130,10 +133,13 @@ class Viewer {
     // console.log(this.context.getProgramInfoLog(program));
   }
 
+  setupEventListeners() {
+    // TODO: implement
+  }
+
   start() {
     // TODO: Support vendor specific
     window.requestAnimationFrame(this.render.bind(this));
-    setTimeout(this.start.bind(this), FRAME_DELTA_TIME);
   }
 
   render() {
@@ -167,6 +173,8 @@ class Viewer {
         shape.vertices.forEach((vertex) => this.drawPoint(vertex, ORANGE));
       }
     }
+
+    window.requestAnimationFrame(this.render.bind(this));
   }
 
   drawOutline(verticesData: number[], color: Vector3) {
