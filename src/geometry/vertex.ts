@@ -32,6 +32,17 @@ class Vertex {
     return data.flat();
   }
 
+  distanceTo(line: [Vertex, Vertex]): number {
+    const p0 = this.position;
+    const p1 = line[0].position;
+    const p2 = line[1].position;
+    const denom = p2.sub(p1).magnitude;
+    const num = Math.abs(
+      (p2.x - p1.x) * (p1.y - p0.y) - (p1.x - p0.x) * (p2.y - p1.y)
+    );
+    return num / denom;
+  }
+
   bind(parent: Shape) {
     this.parent = parent;
   }

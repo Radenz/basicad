@@ -18,6 +18,10 @@ class Vector2 {
     return new Vector2(a.x * b.x, a.y * b.y);
   }
 
+  static squaredDistance(a: Vector2, b: Vector2): number {
+    return Math.pow(a._x - b._x, 2) + Math.pow(a._y - b._y, 2);
+  }
+
   get x(): number {
     return this._x;
   }
@@ -28,6 +32,10 @@ class Vector2 {
 
   get data(): number[] {
     return [this._x, this._y];
+  }
+
+  get magnitude(): number {
+    return Math.sqrt(this._x * this._x + this._y * this._y);
   }
 
   set x(value: number) {
