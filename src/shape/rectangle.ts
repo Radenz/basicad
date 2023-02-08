@@ -71,7 +71,9 @@ class Rectangle extends Shape {
     for (let i = 1; i < 4; i++) {
       const vertex = this._vertices[i];
       let converter = Rectangle.getMultiplier(i as Quadrant);
-      vertex.position.set(Vector2.multiplyEach(vertex.position, converter));
+      vertex.position.set(
+        Vector2.multiplyEach(topRightVertex.position, converter)
+      );
     }
     this.needUpdate = true;
   }
