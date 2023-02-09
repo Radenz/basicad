@@ -10,7 +10,18 @@ abstract class Shape {
   protected dataCache: number[] = [];
   protected needUpdate: boolean = false;
 
-  constructor(readonly transform: Transform) {}
+  readonly transform: Transform;
+
+  constructor(_transform: Transform) {
+    const shape = this;
+    this.transform = new Proxy(_transform, {
+      set(target, p, receiver) {
+        Reflect.set(target, p, receiver);
+        shape.needUpdate = true;
+        return true;
+      },
+    });
+  }
 
   abstract drawMode(context: WebGLRenderingContext): number;
 
