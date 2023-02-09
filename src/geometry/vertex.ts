@@ -7,7 +7,7 @@ class Vertex {
   private parent: Nullable<Shape> = null;
   public onChange: Nullable<(value: Vertex) => void> = null;
 
-  constructor(readonly position: Vector2, public color: Vector3) {
+  constructor(readonly position: Vector2, private _color: Vector3) {
     this.position.onChange = () => {
       if (this.onChange) this.onChange(this);
     };
@@ -19,6 +19,15 @@ class Vertex {
 
   get parentTransform(): Transform {
     return this.parent ? this.parent.transform : Transform.origin;
+  }
+
+  get color(): Vector3 {
+    return this._color;
+  }
+
+  set color(value: Vector3) {
+    this._color = value;
+    if (this.onChange) this.onChange(this);
   }
 
   get data(): number[] {
