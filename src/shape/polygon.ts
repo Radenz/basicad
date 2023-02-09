@@ -1,6 +1,6 @@
 import type { Transform } from "../geometry/transform";
 import { Vector2 } from "../geometry/vector";
-import type { Vertex } from "../geometry/vertex";
+import { Vertex } from "../geometry/vertex";
 import { Shape } from "./shape";
 
 class Polygon extends Shape {
@@ -57,10 +57,24 @@ class Polygon extends Shape {
     this.needUpdate = true;
   }
 
+  deleteVertex(vertex: Vertex | number) {
+    if (vertex instanceof Vertex) this.deleteVertexByRef(vertex);
+    else this.deleteVertexByIndex(vertex);
+    this.needUpdate = true;
+  }
+  private deleteVertexByRef(vertex: Vertex) {
+    const index = this._vertices.indexOf(vertex);
+    this.deleteVertexByIndex(index);
+  }
+  private deleteVertexByIndex(index: number) {
+    if (index < 0 || index >= this.vertexCount) return;
+    this._vertices.splice(index, 1);
+    console.log(this._vertices);
+  }
+
   triangulate(): Vertex[] {
     const vertices = [...this._vertices];
     let convexVertices = Polygon.convexHull(vertices);
-    console.log("convex hull", [...convexVertices]);
     const triangles = [];
     while (vertices.length > 3) {
       const earIndex = Polygon.findEar(vertices, convexVertices);
@@ -72,10 +86,7 @@ class Polygon extends Shape {
 
       triangles.push(vertex1, vertex2, vertex3);
       vertices.splice(earIndex, 1);
-      console.log("ear pos", vertex2.position);
-      console.log("vertices", [...vertices]);
       convexVertices = Polygon.convexHull(vertices);
-      console.log("convex", [...convexVertices]);
     }
     triangles.push(vertices[0], vertices[1], vertices[2]);
 
