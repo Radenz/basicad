@@ -13,7 +13,7 @@ import {
   COLOR_SIZE,
   FLOAT_SIZE,
   G,
-  type Nullable,
+  Nullable,
   ORANGE,
   PARENT_POSITION_INDEX,
   PARENT_ROTATION_INDEX,
