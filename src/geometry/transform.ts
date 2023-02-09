@@ -27,6 +27,14 @@ class Transform {
     this._position = value;
   }
 
+  set x(value: number) {
+    this._position.x = value;
+  }
+
+  set y(value: number) {
+    this._position.y = value;
+  }
+
   set rotation(value: number) {
     this._rotation = value;
   }
