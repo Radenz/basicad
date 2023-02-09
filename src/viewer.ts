@@ -1,10 +1,11 @@
 import { Color } from "./color";
 import { Transform } from "./geometry/transform";
 import { Vector2, Vector3 } from "./geometry/vector";
-import { Vertex } from "./geometry/vertex";
+import type { Vertex } from "./geometry/vertex";
 import { Line } from "./shape/line";
+import { Polygon } from "./shape/polygon";
 import { Rectangle } from "./shape/rectangle";
-import { Shape } from "./shape/shape";
+import type { Shape } from "./shape/shape";
 import { Square } from "./shape/square";
 import {
   B,
@@ -12,7 +13,7 @@ import {
   COLOR_SIZE,
   FLOAT_SIZE,
   G,
-  Nullable,
+  type Nullable,
   ORANGE,
   PARENT_POSITION_INDEX,
   PARENT_ROTATION_INDEX,
@@ -147,7 +148,7 @@ class Viewer {
     for (const shape of this.shapes) {
       if (shape.isHidden) continue;
 
-      const data = shape.data;
+      const data = Array.from(shape.data);
 
       if (this.viewMode === "solid") {
         this.context.bufferData(
@@ -164,12 +165,12 @@ class Viewer {
       }
 
       if (this.viewMode === "wireframe") {
-        this.drawOutline(data, Color.black);
+        this.drawOutline(data, shape, Color.black);
         shape.vertices.forEach((vertex) => this.drawPoint(vertex, Color.black));
       }
 
       if (shape.isHighlighted) {
-        this.drawOutline(data, ORANGE);
+        this.drawOutline(data, shape, ORANGE);
         shape.vertices.forEach((vertex) => this.drawPoint(vertex, ORANGE));
       }
     }
@@ -177,7 +178,10 @@ class Viewer {
     window.requestAnimationFrame(this.render.bind(this));
   }
 
-  drawOutline(verticesData: number[], color: Vector3) {
+  drawOutline(verticesData: number[], shape: Shape, color: Vector3) {
+    if (shape.drawMode(this.context) === this.context.TRIANGLES)
+      verticesData = shape.vertices.map((v) => v.data).flat();
+
     const vertexCount = verticesData.length / VERTEX_SIZE;
     for (let i = 0; i < vertexCount; i++) {
       // R channel
@@ -237,17 +241,22 @@ class Viewer {
     this.context.drawArrays(this.context.TRIANGLE_FAN, 0, 10);
   }
 
-  // /**
-  //  *
-  //  * @param {Transform} transform
-  //  * @param {Vertex[]} vertices
-  //  * @returns {Triangle}
-  //  */
-  // createTriangle(transform, vertices) {
-  //   const triangle = new Triangle(transform, vertices);
-  //   this.shapes.push(triangle);
-  //   return triangle;
-  // }
+  select(object: Nullable<Shape>) {
+    for (const shape of this.shapes) {
+      shape.isHighlighted = shape === object;
+    }
+  }
+  switchViewMode() {
+    this.viewMode = this.viewMode === "solid" ? "wireframe" : "solid";
+  }
+  switchMode() {
+    if (this.mode === "object") {
+      if (this.selected === null) return;
+      this.mode = "edit";
+      return;
+    }
+    this.mode = "object";
+  }
 
   createSquare(transform: Transform, size: number): Square {
     const square = new Square(transform, size);
@@ -269,6 +278,17 @@ class Viewer {
     const rect = new Rectangle(transform, length, width);
     this.shapes.push(rect);
     return rect;
+  }
+
+  createPolygon(transform: Transform): Polygon {
+    const p = new Polygon(transform);
+    this.shapes.push(p);
+    return p;
+  }
+  createDefaultPolygon(): Polygon {
+    const p = new Polygon(Transform.origin);
+    this.shapes.push(p);
+    return p;
   }
 }
 
