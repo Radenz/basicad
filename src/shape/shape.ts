@@ -1,5 +1,5 @@
 import { Transform } from "../geometry/transform";
-import { Vector2 } from "../geometry/vector";
+import { Vector2, Vector3 } from "../geometry/vector";
 import { Vertex } from "../geometry/vertex";
 
 abstract class Shape {
@@ -43,6 +43,13 @@ abstract class Shape {
 
   set isHidden(value: boolean) {
     this.hidden = value;
+  }
+
+  setVerticesColor(color: Vector3) {
+    this._vertices.forEach((vertex) => {
+      vertex.color = color.clone();
+    });
+    this.needUpdate = true;
   }
 
   rotate(angle: number) {

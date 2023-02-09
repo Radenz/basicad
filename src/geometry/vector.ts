@@ -111,6 +111,10 @@ class Vector3 {
   get z(): number {
     return this._z;
   }
+
+  clone(): Vector3 {
+    return new Vector3(this._x, this._y, this._z);
+  }
 }
 
 export { Vector2, Vector3 };
