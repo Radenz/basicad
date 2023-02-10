@@ -105,7 +105,11 @@ class Polygon extends Shape {
     const area3 = Polygon.doubleTriangleArea(point, vertex3, vertex1);
     const totalArea = area1 + area2 + area3;
 
-    return Math.abs(triangleArea - totalArea) < 1e-8;
+    return (
+      Math.abs(triangleArea - totalArea) < Number.EPSILON &&
+      // Stacking vertex workaround
+      triangleArea - totalArea != 0
+    );
   }
 
   static doubleTriangleArea(a: Vector2, b: Vector2, c: Vector2) {
