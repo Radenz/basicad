@@ -201,6 +201,7 @@ class Viewer {
         break;
       case "KeyS":
         // TODO: Scale
+        if (this.selected) this.scaleSelected();
         break;
     }
   }
@@ -284,6 +285,52 @@ class Viewer {
       const angle = -currentPos.sub(selectedPos).arc();
       const diff = angle - initialAngle;
       this.selected.transform.rotation = initialRotation + diff;
+    };
+    window.addEventListener("mousemove", setter);
+
+    const stopper: (_: MouseEvent | KeyboardEvent) => any = (
+      e: MouseEvent | KeyboardEvent
+    ) => {
+      if (e instanceof MouseEvent || (e as KeyboardEvent).code === "Escape") {
+        window.removeEventListener("mousemove", setter);
+        window.removeEventListener("keydown", stopper);
+        window.removeEventListener("click", stopper);
+      }
+    };
+    window.addEventListener("keydown", stopper);
+    window.addEventListener("click", stopper);
+  }
+
+  scaleSelected() {
+    let initialDistance: number;
+    let initialScale = this.selected.transform.scale;
+    const canvasRect = this.canvas.getBoundingClientRect();
+    let selectedPos = this.selectedCoord.clone();
+    selectedPos.scaleY(-1);
+    selectedPos.scale(0.5);
+    selectedPos.x += 0.5;
+    selectedPos.y += 0.5;
+    selectedPos.scaleX(canvasRect.width);
+    selectedPos.scaleY(canvasRect.height);
+    selectedPos.x += canvasRect.x;
+    selectedPos.y += canvasRect.y;
+
+    window.addEventListener(
+      "mousemove",
+      (e: MouseEvent) => {
+        const initialPos = new Vector2(e.clientX, e.clientY);
+        initialDistance = Vector2.distance(selectedPos, initialPos);
+      },
+      {
+        once: true,
+      }
+    );
+
+    const setter: (_: MouseEvent) => any = (e: MouseEvent) => {
+      const currentPos = new Vector2(e.clientX, e.clientY);
+      const distance = Vector2.distance(selectedPos, currentPos);
+      const scale = distance / initialDistance;
+      this.selected.transform.scale = initialScale * scale;
     };
     window.addEventListener("mousemove", setter);
 
