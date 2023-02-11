@@ -36,18 +36,14 @@ class Vertex {
   }
 
   set globalCoord(coord: Vector2) {
-    // const coord = this.position.clone();
     const scale = this.parent?.transform.scale ?? 1;
     const rotation = this.parent?.transform.rotation ?? 0;
     const translation = this.parent?.transform.position ?? Vector2.zero;
-    coord.scale(scale);
-    coord.rotate(rotation, Vector2.zero);
     const localCoord = coord.sub(translation);
     localCoord.rotate(-rotation, Vector2.zero);
     localCoord.scale(1 / scale);
     this.position.x = localCoord.x;
     this.position.y = localCoord.y;
-    // return coord.add(translation);
   }
 
   set color(value: Vector3) {
