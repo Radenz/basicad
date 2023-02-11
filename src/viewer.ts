@@ -170,7 +170,9 @@ class Viewer {
         }
         break;
       case "KeyG":
-        if (this.selected) this.grabSelected();
+        if (this.mode === "edit" && this.selectedVertex)
+          this.grabSelectedVertex();
+        if (this.mode === "object" && this.selected) this.grabSelected();
         break;
       case "KeyR":
         if (this.selected) this.rotateSelected();
@@ -293,6 +295,47 @@ class Viewer {
 
         if (e instanceof KeyboardEvent) {
           this.selected.transform.position.set(initialPosition);
+          this.selected.update();
+        }
+      }
+    };
+    window.addEventListener("keydown", stopper);
+    window.addEventListener("click", stopper);
+  }
+
+  grabSelectedVertex() {
+    let initialNormalizedCoord: Vector2;
+    let initialPosition: Vector2;
+    window.addEventListener(
+      "mousemove",
+      (e: MouseEvent) => {
+        const screenCoord = new Vector2(e.clientX, e.clientY);
+        initialNormalizedCoord = this.normalizeCoord(screenCoord);
+        initialPosition = this.selectedVertex.position.clone();
+      },
+      {
+        once: true,
+      }
+    );
+
+    const setter: (_: MouseEvent) => any = (e: MouseEvent) => {
+      if (!initialNormalizedCoord) return;
+      const screenCoord = new Vector2(e.clientX, e.clientY);
+      const normalizedCoord = this.normalizeCoord(screenCoord);
+      this.selectedVertex.globalCoord = normalizedCoord;
+    };
+    window.addEventListener("mousemove", setter);
+
+    const stopper: (_: MouseEvent | KeyboardEvent) => any = (
+      e: MouseEvent | KeyboardEvent
+    ) => {
+      if (e instanceof MouseEvent || (e as KeyboardEvent).code === "Escape") {
+        window.removeEventListener("mousemove", setter);
+        window.removeEventListener("keydown", stopper);
+        window.removeEventListener("click", stopper);
+
+        if (e instanceof KeyboardEvent) {
+          this.selectedVertex.position.set(initialPosition);
           this.selected.update();
         }
       }
@@ -548,6 +591,22 @@ class Viewer {
       return;
     }
     this.mode = "object";
+  }
+
+  normalizeCoord(coord: Vector2) {
+    const canvasRect = this.canvas.getBoundingClientRect();
+    const rectOffset = new Vector2(
+      coord.x - canvasRect.x,
+      coord.y - canvasRect.y
+    );
+    rectOffset.scaleX(1 / canvasRect.width);
+    rectOffset.scaleY(1 / canvasRect.height);
+    const normalizedCoord = new Vector2(
+      (rectOffset.x - 0.5) * 2,
+      (rectOffset.y - 0.5) * 2
+    );
+    normalizedCoord.scaleY(-1);
+    return normalizedCoord;
   }
 
   createSquare(transform: Transform, size: number): Square {
