@@ -147,15 +147,25 @@ class Viewer {
 
     this.canvas.addEventListener("click", (e: PointerEvent) => {
       const canvasRect = this.canvas.getBoundingClientRect();
-      const normalizedCoord = new Vector2(
-        (e.offsetX / canvasRect.width - 0.5) * 2,
-        (e.offsetY / canvasRect.height - 0.5) * 2
+      const rectOffset = new Vector2(
+        e.offsetX - canvasRect.x,
+        e.offsetY - canvasRect.y
       );
+      rectOffset.scaleX(1 / canvasRect.width);
+      rectOffset.scaleY(1 / canvasRect.height);
+      const normalizedCoord = new Vector2(
+        (rectOffset.x - 0.5) * 2,
+        (rectOffset.y - 0.5) * 2
+      );
+      normalizedCoord.scaleY(-1);
 
       let selectedShape = null;
       let minDistance = 2;
       for (const shape of this.shapes) {
-        const shapeDistance = Vector2.distance(normalizedCoord, shape.center);
+        const shapeDistance = Vector2.distance(
+          normalizedCoord,
+          shape.transform.position
+        );
         if (shapeDistance < minDistance) {
           selectedShape = shape;
           minDistance = shapeDistance;
@@ -325,7 +335,7 @@ class Viewer {
         shape.vertices.forEach((vertex) => this.drawPoint(vertex, Color.black));
       }
 
-      if (shape.isHighlighted) {
+      if (shape === this.selected) {
         this.drawOutline(data, shape, ORANGE);
         shape.vertices.forEach((vertex) => this.drawPoint(vertex, ORANGE));
       }
