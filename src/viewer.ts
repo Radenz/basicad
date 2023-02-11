@@ -145,7 +145,12 @@ class Viewer {
       this.onKeyPressed(e.code);
     });
 
+    window.addEventListener("keydown", (e: KeyboardEvent) => {
+      this.onKeyDown(e);
+    });
+
     this.canvas.addEventListener("click", (e: PointerEvent) => {
+      // TODO: Handle different mode
       const canvasRect = this.canvas.getBoundingClientRect();
       const rectOffset = new Vector2(
         e.offsetX - canvasRect.x,
@@ -190,7 +195,6 @@ class Viewer {
           this.shapes.splice(index, 1);
         }
         break;
-
       case "KeyG":
         if (this.selected) this.grabSelected();
         break;
@@ -199,6 +203,15 @@ class Viewer {
         break;
       case "KeyS":
         if (this.selected) this.scaleSelected();
+        break;
+    }
+  }
+
+  onKeyDown(event: KeyboardEvent) {
+    switch (event.code) {
+      case "Tab":
+        event.preventDefault();
+        if (this.selected) this.switchMode();
         break;
     }
   }
@@ -394,7 +407,9 @@ class Viewer {
 
       if (shape === this.selected) {
         this.drawOutline(data, shape, ORANGE);
-        shape.vertices.forEach((vertex) => this.drawPoint(vertex, ORANGE));
+        shape.vertices.forEach((vertex) =>
+          this.drawPoint(vertex, this.mode === "object" ? ORANGE : Color.black)
+        );
       }
     }
 
