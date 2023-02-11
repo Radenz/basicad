@@ -19,4 +19,19 @@ document.addEventListener("DOMContentLoaded", () => {
   window["ln"] = ln;
   window["rect"] = rect;
   window["viewer"] = viewer;
+
+  setupButtons(viewer);
 });
+
+function setupButtons(viewer: Viewer) {
+  const solidViewButton = document.getElementById("solid");
+  const wireframeViewButton = document.getElementById("wireframe");
+
+  solidViewButton.addEventListener("click", () => {
+    viewer.setViewMode("solid");
+  });
+
+  wireframeViewButton.addEventListener("click", () => {
+    viewer.setViewMode("wireframe");
+  });
+}
