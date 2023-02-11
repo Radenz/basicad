@@ -29,6 +29,7 @@ class Square extends Shape {
   onVertexChanged(vertex: Vertex) {
     let index = this._vertices.indexOf(vertex);
     let position = vertex.position.clone();
+    this._size = position.magnitude * Math.SQRT2;
     for (let i = 1; i < 4; i++) {
       const vertexIndex = (index + i) % 4;
       const vertex = this._vertices[vertexIndex];
