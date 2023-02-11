@@ -69,6 +69,10 @@ class Vector2 {
     return new Vector2(this._x - other._x, this._y - other._y);
   }
 
+  arc(): number {
+    return Math.atan2(this._y, this._x);
+  }
+
   rotate(angle: number, origin: Vector2) {
     const diff = this.sub(origin);
     const c = Math.cos(angle);

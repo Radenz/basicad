@@ -187,6 +187,7 @@ class Viewer {
         break;
       case "KeyR":
         // TODO: Rotate
+        if (this.selected) this.rotateSelected();
         break;
       case "KeyS":
         // TODO: Scale
@@ -204,8 +205,6 @@ class Viewer {
         initialX = e.clientX;
         initialY = e.clientY;
         initialPosition = this.selected.transform.position.clone();
-        console.log("Initial", initialX, initialY);
-        console.log("Initial position", initialPosition);
       },
       {
         once: true,
@@ -223,8 +222,6 @@ class Viewer {
       const newPosition = initialPosition.add(delta);
       this.selected.transform.x = newPosition.x;
       this.selected.transform.y = newPosition.y;
-      console.log("Current", e.clientX, e.clientY);
-      console.log("Current position", this.selected.transform.position.clone());
     };
     window.addEventListener("mousemove", setter);
 
@@ -239,6 +236,62 @@ class Viewer {
     };
     window.addEventListener("keydown", stopper);
     window.addEventListener("click", stopper);
+  }
+
+  rotateSelected() {
+    let initialAngle: number;
+    let initialRotation = this.selected.transform.rotation;
+    const canvasRect = this.canvas.getBoundingClientRect();
+    let selectedPos = this.selectedCoord.clone();
+    selectedPos.scaleY(-1);
+    selectedPos.scale(0.5);
+    selectedPos.x += 0.5;
+    selectedPos.y += 0.5;
+    selectedPos.scaleX(canvasRect.width);
+    selectedPos.scaleY(canvasRect.height);
+    selectedPos.x += canvasRect.x;
+    selectedPos.y += canvasRect.y;
+
+    window.addEventListener(
+      "mousemove",
+      (e: MouseEvent) => {
+        const initialPos = new Vector2(e.clientX, e.clientY);
+        console.log(selectedPos);
+        console.log(initialPos);
+        // ? Negates because positive y is downwards
+        initialAngle = -initialPos.sub(selectedPos).arc();
+        console.log("initialAngle", (initialAngle * 180) / Math.PI);
+      },
+      {
+        once: true,
+      }
+    );
+
+    const setter: (_: MouseEvent) => any = (e: MouseEvent) => {
+      if (!initialAngle) return;
+      const currentPos = new Vector2(e.clientX, e.clientY);
+      // ? Negates because positive y is downwards
+      const angle = -currentPos.sub(selectedPos).arc();
+      const diff = angle - initialAngle;
+      this.selected.transform.rotation = initialRotation + diff;
+    };
+    window.addEventListener("mousemove", setter);
+
+    const stopper: (_: MouseEvent | KeyboardEvent) => any = (
+      e: MouseEvent | KeyboardEvent
+    ) => {
+      if (e instanceof MouseEvent || (e as KeyboardEvent).code === "Escape") {
+        window.removeEventListener("mousemove", setter);
+        window.removeEventListener("keydown", stopper);
+        window.removeEventListener("click", stopper);
+      }
+    };
+    window.addEventListener("keydown", stopper);
+    window.addEventListener("click", stopper);
+  }
+
+  get selectedCoord(): Vector2 {
+    return this.selected?.transform.position;
   }
 
   start() {
@@ -345,6 +398,7 @@ class Viewer {
   }
 
   select(object: Nullable<Shape>) {
+    console.log(object);
     for (const shape of this.shapes) {
       shape.isHighlighted = shape === object;
     }
