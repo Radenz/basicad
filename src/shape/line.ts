@@ -19,6 +19,7 @@ class Line extends Shape {
     this._vertices = [vertexA, vertexB];
     this._vertices.forEach((v) => {
       v.bind(this);
+      v.onChange = (vertex) => this.onVertexChanged(vertex);
     });
   }
 
@@ -30,6 +31,13 @@ class Line extends Shape {
     const factor = value / this._length;
     this._vertices.forEach((v) => v.scale(factor));
     this._length = value;
+    this.needUpdate = true;
+  }
+
+  onVertexChanged(_: Vertex) {
+    const vertex1 = this._vertices[0];
+    const vertex2 = this._vertices[1];
+    this._length = Vector2.distance(vertex1.position, vertex2.position);
     this.needUpdate = true;
   }
 
