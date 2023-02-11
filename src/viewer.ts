@@ -609,6 +609,62 @@ class Viewer {
     return normalizedCoord;
   }
 
+  createDefaultLine(): Line {
+    const lengthString = prompt("Line length: (default 0.4)");
+    let length = parseFloat(lengthString);
+    length = isNaN(length) ? 0.4 : length;
+    length = length > 2 * Math.SQRT2 ? 0.4 : length;
+    length = length <= 0 ? 0.4 : length;
+    const line = new Line(Transform.origin, length);
+    this.shapes.push(line);
+    return line;
+  }
+
+  createDefaultSquare(): Square {
+    const sizeString = prompt("Square size: (default 0.25)");
+    let size = parseFloat(sizeString);
+    size = isNaN(size) ? 0.25 : size;
+    size = size > 2 ? 0.25 : size;
+    size = size <= 0 ? 0.25 : size;
+    const square = new Square(Transform.origin, size);
+    this.shapes.push(square);
+    return square;
+  }
+
+  createDefaultRectangle(): Rectangle {
+    const lengthString = prompt("Rectangle length: (default 0.6)");
+    let length = parseFloat(lengthString);
+    length = isNaN(length) ? 0.6 : length;
+    length = length > 2 ? 0.6 : length;
+    length = length <= 0 ? 0.6 : length;
+
+    const widthString = prompt("Rectangle width: (default 0.2)");
+    let width = parseFloat(widthString);
+    width = isNaN(length) ? 0.2 : width;
+    width = width > 2 ? 0.2 : width;
+    width = width <= 0 ? 0.2 : width;
+    const rectangle = new Rectangle(Transform.origin, length, width);
+    this.shapes.push(rectangle);
+    return rectangle;
+  }
+
+  createDefaultPolygon(): Polygon {
+    const sideString = prompt("Polygon sides: (default 5)");
+    let side = parseInt(sideString);
+    side = isNaN(side) ? 0.25 : side;
+    side = side <= 2 ? 5 : side;
+
+    const sizeString = prompt("Polygon size: (default 0.3)");
+    let size = parseFloat(sizeString);
+    size = isNaN(size) ? 0.25 : size;
+    size = size > 2 ? 0.25 : size;
+    size = size <= 0 ? 0.25 : size;
+
+    const polygon = Polygon.regular(side, size);
+    this.shapes.push(polygon);
+    return polygon;
+  }
+
   createSquare(transform: Transform, size: number): Square {
     const square = new Square(transform, size);
     this.shapes.push(square);
@@ -633,11 +689,6 @@ class Viewer {
 
   createPolygon(transform: Transform): Polygon {
     const p = new Polygon(transform);
-    this.shapes.push(p);
-    return p;
-  }
-  createDefaultPolygon(): Polygon {
-    const p = new Polygon(Transform.origin);
     this.shapes.push(p);
     return p;
   }

@@ -1,4 +1,5 @@
-import type { Transform } from "../geometry/transform";
+import { Color } from "../color";
+import { Transform } from "../geometry/transform";
 import { Vector2 } from "../geometry/vector";
 import { Vertex } from "../geometry/vertex";
 import { Shape } from "./shape";
@@ -6,6 +7,23 @@ import { Shape } from "./shape";
 class Polygon extends Shape {
   constructor(transform: Transform) {
     super(transform);
+  }
+
+  static regular(vertices: number, radius: number): Polygon {
+    const polygon = new Polygon(Transform.origin);
+    let vertex = new Vertex(new Vector2(0, radius), Color.black);
+    polygon.addVertex(vertex);
+    const angle = (Math.PI * 2) / vertices;
+
+    vertices--;
+    while (vertices--) {
+      const newPosition = vertex.position.clone();
+      newPosition.rotate(angle, Vector2.zero);
+      vertex = new Vertex(newPosition, Color.black);
+      polygon.addVertex(vertex);
+    }
+
+    return polygon;
   }
 
   get data() {
