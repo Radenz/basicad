@@ -192,15 +192,12 @@ class Viewer {
         break;
 
       case "KeyG":
-        // TODO: Grab
         if (this.selected) this.grabSelected();
         break;
       case "KeyR":
-        // TODO: Rotate
         if (this.selected) this.rotateSelected();
         break;
       case "KeyS":
-        // TODO: Scale
         if (this.selected) this.scaleSelected();
         break;
     }
@@ -231,8 +228,8 @@ class Viewer {
       );
       delta.scale(2);
       const newPosition = initialPosition.add(delta);
-      this.selected.transform.x = newPosition.x;
-      this.selected.transform.y = newPosition.y;
+      this.selected.transform.position.set(newPosition);
+      this.selected.update();
     };
     window.addEventListener("mousemove", setter);
 
@@ -243,6 +240,11 @@ class Viewer {
         window.removeEventListener("mousemove", setter);
         window.removeEventListener("keydown", stopper);
         window.removeEventListener("click", stopper);
+
+        if (e instanceof KeyboardEvent) {
+          this.selected.transform.position.set(initialPosition);
+          this.selected.update();
+        }
       }
     };
     window.addEventListener("keydown", stopper);
@@ -295,6 +297,10 @@ class Viewer {
         window.removeEventListener("mousemove", setter);
         window.removeEventListener("keydown", stopper);
         window.removeEventListener("click", stopper);
+
+        if (e instanceof KeyboardEvent) {
+          this.selected.transform.rotation = initialRotation;
+        }
       }
     };
     window.addEventListener("keydown", stopper);
@@ -341,6 +347,10 @@ class Viewer {
         window.removeEventListener("mousemove", setter);
         window.removeEventListener("keydown", stopper);
         window.removeEventListener("click", stopper);
+
+        if (e instanceof KeyboardEvent) {
+          this.selected.transform.scale = initialScale;
+        }
       }
     };
     window.addEventListener("keydown", stopper);

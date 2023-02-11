@@ -65,6 +65,10 @@ abstract class Shape {
     this.hidden = value;
   }
 
+  update() {
+    this.needUpdate = true;
+  }
+
   setVerticesColor(color: Vector3) {
     this._vertices.forEach((vertex) => {
       vertex.color = color.clone();

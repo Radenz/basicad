@@ -20,10 +20,6 @@ class Polygon extends Shape {
     return this.dataCache;
   }
 
-  update() {
-    this.needUpdate = true;
-  }
-
   pivotIndex(): number {
     const center = this.center;
     let minDistance = Number.POSITIVE_INFINITY;
