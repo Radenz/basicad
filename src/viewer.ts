@@ -640,9 +640,10 @@ class Viewer {
 
     const widthString = prompt("Rectangle width: (default 0.2)");
     let width = parseFloat(widthString);
-    width = isNaN(length) ? 0.2 : width;
+    width = isNaN(width) ? 0.2 : width;
     width = width > 2 ? 0.2 : width;
     width = width <= 0 ? 0.2 : width;
+
     const rectangle = new Rectangle(Transform.origin, length, width);
     this.shapes.push(rectangle);
     return rectangle;
