@@ -33,6 +33,7 @@ class Viewer {
   private viewMode: ViewMode = "solid";
   private mode: Mode = "object";
   private selected: Nullable<Shape> = null;
+  private selectedVertex: Nullable<Vertex> = null;
   private canvas: HTMLCanvasElement;
 
   constructor(canvas: HTMLCanvasElement) {
@@ -150,34 +151,7 @@ class Viewer {
     });
 
     this.canvas.addEventListener("click", (e: PointerEvent) => {
-      // TODO: Handle different mode
-      const canvasRect = this.canvas.getBoundingClientRect();
-      const rectOffset = new Vector2(
-        e.offsetX - canvasRect.x,
-        e.offsetY - canvasRect.y
-      );
-      rectOffset.scaleX(1 / canvasRect.width);
-      rectOffset.scaleY(1 / canvasRect.height);
-      const normalizedCoord = new Vector2(
-        (rectOffset.x - 0.5) * 2,
-        (rectOffset.y - 0.5) * 2
-      );
-      normalizedCoord.scaleY(-1);
-
-      let selectedShape = null;
-      let minDistance = 2;
-      for (const shape of this.shapes) {
-        const shapeDistance = Vector2.distance(
-          normalizedCoord,
-          shape.transform.position
-        );
-        if (shapeDistance < minDistance) {
-          selectedShape = shape;
-          minDistance = shapeDistance;
-        }
-      }
-
-      if (minDistance <= 0.1) this.select(selectedShape);
+      this.onClick(e);
     });
   }
 
@@ -214,6 +188,69 @@ class Viewer {
         if (this.selected) this.switchMode();
         break;
     }
+  }
+
+  onClick(event: MouseEvent) {
+    this.mode === "object"
+      ? this.trySelectShape(event)
+      : this.trySelectVertex(event);
+  }
+
+  trySelectShape(event: MouseEvent) {
+    const canvasRect = this.canvas.getBoundingClientRect();
+    const rectOffset = new Vector2(
+      event.offsetX - canvasRect.x,
+      event.offsetY - canvasRect.y
+    );
+    rectOffset.scaleX(1 / canvasRect.width);
+    rectOffset.scaleY(1 / canvasRect.height);
+    const normalizedCoord = new Vector2(
+      (rectOffset.x - 0.5) * 2,
+      (rectOffset.y - 0.5) * 2
+    );
+    normalizedCoord.scaleY(-1);
+
+    let selectedShape = null;
+    let minDistance = 2;
+    for (const shape of this.shapes) {
+      const shapeDistance = Vector2.distance(
+        normalizedCoord,
+        shape.transform.position
+      );
+      if (shapeDistance < minDistance) {
+        selectedShape = shape;
+        minDistance = shapeDistance;
+      }
+    }
+
+    if (minDistance <= 0.1) this.select(selectedShape);
+  }
+
+  trySelectVertex(event: MouseEvent) {
+    const canvasRect = this.canvas.getBoundingClientRect();
+    const rectOffset = new Vector2(
+      event.offsetX - canvasRect.x,
+      event.offsetY - canvasRect.y
+    );
+    rectOffset.scaleX(1 / canvasRect.width);
+    rectOffset.scaleY(1 / canvasRect.height);
+    const normalizedCoord = new Vector2(
+      (rectOffset.x - 0.5) * 2,
+      (rectOffset.y - 0.5) * 2
+    );
+    normalizedCoord.scaleY(-1);
+
+    let selectedVertex = null;
+    let minDistance = 2;
+    for (const vertex of this.selected.vertices) {
+      const distance = Vector2.distance(normalizedCoord, vertex.globalCoord);
+      if (distance < minDistance) {
+        selectedVertex = vertex;
+        minDistance = distance;
+      }
+    }
+
+    if (minDistance <= 0.02) this.selectVertex(selectedVertex);
   }
 
   grabSelected() {
@@ -406,11 +443,16 @@ class Viewer {
       }
 
       if (shape === this.selected) {
-        this.drawOutline(data, shape, ORANGE);
+        const highlightColor = this.mode === "object" ? ORANGE : Color.black;
+        this.drawOutline(data, shape, highlightColor);
         shape.vertices.forEach((vertex) =>
-          this.drawPoint(vertex, this.mode === "object" ? ORANGE : Color.black)
+          this.drawPoint(vertex, highlightColor)
         );
       }
+    }
+
+    if (this.mode === "edit" && this.selectedVertex) {
+      this.drawPoint(this.selectedVertex, ORANGE);
     }
 
     window.requestAnimationFrame(this.render.bind(this));
@@ -480,11 +522,15 @@ class Viewer {
   }
 
   select(object: Nullable<Shape>) {
-    console.log(object);
+    this.selectedVertex = null;
     for (const shape of this.shapes) {
       shape.isHighlighted = shape === object;
     }
     this.selected = object;
+  }
+
+  selectVertex(vertex: Nullable<Vertex>) {
+    this.selectedVertex = vertex;
   }
 
   setViewMode(viewMode: ViewMode) {
