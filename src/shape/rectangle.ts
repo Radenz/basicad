@@ -75,6 +75,9 @@ class Rectangle extends Shape {
         Vector2.multiplyEach(topRightVertex.position, converter)
       );
     }
+
+    this._length = Math.abs(topRightVertex.position.x * 2);
+    this._width = Math.abs(topRightVertex.position.y * 2);
     this.needUpdate = true;
   }
 
