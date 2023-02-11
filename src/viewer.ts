@@ -225,7 +225,7 @@ class Viewer {
       }
     }
 
-    if (minDistance <= 0.1) this.select(selectedShape);
+    this.select(minDistance <= 0.1 ? selectedShape : null);
   }
 
   trySelectVertex(event: MouseEvent) {
@@ -252,7 +252,7 @@ class Viewer {
       }
     }
 
-    if (minDistance <= 0.02) this.selectVertex(selectedVertex);
+    this.selectVertex(minDistance <= 0.02 ? selectedVertex : null);
   }
 
   grabSelected() {
