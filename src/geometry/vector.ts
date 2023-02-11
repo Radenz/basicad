@@ -22,6 +22,10 @@ class Vector2 {
     return Math.pow(a._x - b._x, 2) + Math.pow(a._y - b._y, 2);
   }
 
+  static distance(a: Vector2, b: Vector2): number {
+    return Math.sqrt(Vector2.squaredDistance(a, b));
+  }
+
   get x(): number {
     return this._x;
   }

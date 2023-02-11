@@ -24,15 +24,6 @@ class Polygon extends Shape {
     this.needUpdate = true;
   }
 
-  get center(): Vector2 {
-    if (this._vertices.length === 0) return Vector2.zero;
-    let sum = Vector2.zero;
-
-    this._vertices.forEach((v) => (sum = sum.add(v.position)));
-    sum.scale(1 / this._vertices.length);
-    return sum;
-  }
-
   pivotIndex(): number {
     const center = this.center;
     let minDistance = Number.POSITIVE_INFINITY;

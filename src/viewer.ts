@@ -33,12 +33,16 @@ class Viewer {
   private viewMode: ViewMode = "solid";
   private mode: Mode = "object";
   private selected: Nullable<Shape> = null;
+  private canvas: HTMLCanvasElement;
 
   constructor(canvas: HTMLCanvasElement) {
     // TODO: Try other contex, add guard
     this.context = canvas.getContext("webgl")!;
+    this.canvas = canvas;
     this.shapes = [];
     this.context.viewport(0, 0, canvas.width, canvas.height);
+
+    this.setupEventListeners();
     this.setup().then(this.start.bind(this));
   }
 
@@ -136,6 +140,105 @@ class Viewer {
 
   setupEventListeners() {
     // TODO: implement
+    window.addEventListener("keypress", (e: KeyboardEvent) => {
+      console.log(e);
+      this.onKeyPressed(e.code);
+    });
+
+    this.canvas.addEventListener("click", (e: PointerEvent) => {
+      const canvasRect = this.canvas.getBoundingClientRect();
+      const normalizedCoord = new Vector2(
+        (e.offsetX / canvasRect.width - 0.5) * 2,
+        (e.offsetY / canvasRect.height - 0.5) * 2
+      );
+
+      let selectedShape = null;
+      let minDistance = 2;
+      for (const shape of this.shapes) {
+        const shapeDistance = Vector2.distance(normalizedCoord, shape.center);
+        if (shapeDistance < minDistance) {
+          selectedShape = shape;
+          minDistance = shapeDistance;
+        }
+      }
+
+      if (minDistance <= 0.1) this.select(selectedShape);
+    });
+  }
+
+  onKeyPressed(code: string) {
+    switch (code) {
+      case "KeyQ":
+        this.setViewMode("solid");
+        break;
+      case "KeyW":
+        this.setViewMode("wireframe");
+        break;
+      case "KeyX":
+        if (this.selected) {
+          const index = this.shapes.indexOf(this.selected);
+          this.shapes.splice(index, 1);
+        }
+        break;
+
+      case "KeyG":
+        // TODO: Grab
+        if (this.selected) this.grabSelected();
+        break;
+      case "KeyR":
+        // TODO: Rotate
+        break;
+      case "KeyS":
+        // TODO: Scale
+        break;
+    }
+  }
+
+  grabSelected() {
+    let initialX: number;
+    let initialY: number;
+    let initialPosition: Vector2;
+    window.addEventListener(
+      "mousemove",
+      (e: MouseEvent) => {
+        initialX = e.clientX;
+        initialY = e.clientY;
+        initialPosition = this.selected.transform.position.clone();
+        console.log("Initial", initialX, initialY);
+        console.log("Initial position", initialPosition);
+      },
+      {
+        once: true,
+      }
+    );
+
+    const setter: (_: MouseEvent) => any = (e: MouseEvent) => {
+      if (!initialX || !initialY) return;
+      const canvasRect = this.canvas.getBoundingClientRect();
+      const delta = new Vector2(
+        (e.clientX - initialX) / canvasRect.width,
+        (initialY - e.clientY) / canvasRect.height
+      );
+      delta.scale(2);
+      const newPosition = initialPosition.add(delta);
+      this.selected.transform.x = newPosition.x;
+      this.selected.transform.y = newPosition.y;
+      console.log("Current", e.clientX, e.clientY);
+      console.log("Current position", this.selected.transform.position.clone());
+    };
+    window.addEventListener("mousemove", setter);
+
+    const stopper: (_: MouseEvent | KeyboardEvent) => any = (
+      e: MouseEvent | KeyboardEvent
+    ) => {
+      if (e instanceof MouseEvent || (e as KeyboardEvent).code === "Escape") {
+        window.removeEventListener("mousemove", setter);
+        window.removeEventListener("keydown", stopper);
+        window.removeEventListener("click", stopper);
+      }
+    };
+    window.addEventListener("keydown", stopper);
+    window.addEventListener("click", stopper);
   }
 
   start() {
@@ -245,10 +348,17 @@ class Viewer {
     for (const shape of this.shapes) {
       shape.isHighlighted = shape === object;
     }
+    this.selected = object;
   }
+
+  setViewMode(viewMode: ViewMode) {
+    this.viewMode = viewMode;
+  }
+
   switchViewMode() {
     this.viewMode = this.viewMode === "solid" ? "wireframe" : "solid";
   }
+
   switchMode() {
     if (this.mode === "object") {
       if (this.selected === null) return;

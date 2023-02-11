@@ -48,6 +48,15 @@ abstract class Shape {
     return this._vertices.length;
   }
 
+  get center(): Vector2 {
+    if (this._vertices.length === 0) return Vector2.zero;
+    let sum = Vector2.zero;
+
+    this._vertices.forEach((v) => (sum = sum.add(v.position)));
+    sum.scale(1 / this._vertices.length);
+    return sum;
+  }
+
   set isHighlighted(value: boolean) {
     this.highlight = value;
   }
