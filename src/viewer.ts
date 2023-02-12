@@ -345,6 +345,8 @@ class Viewer {
   }
 
   rotateSelected() {
+    if (this.mode === "edit") return;
+
     let initialAngle: number;
     let initialRotation = this.selected.transform.rotation;
     const canvasRect = this.canvas.getBoundingClientRect();
@@ -401,6 +403,8 @@ class Viewer {
   }
 
   scaleSelected() {
+    if (this.mode === "edit") return;
+
     let initialDistance: number;
     let initialScale = this.selected.transform.scale;
     const canvasRect = this.canvas.getBoundingClientRect();
