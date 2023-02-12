@@ -163,6 +163,11 @@ class Viewer {
       case "KeyW":
         this.setViewMode("wireframe");
         break;
+      case "KeyH":
+        if (this.mode === "object" && this.selected) {
+          this.selected.isHidden = true;
+        }
+        break;
       case "KeyX":
         if (this.selected && this.mode === "object") {
           const index = this.shapes.indexOf(this.selected);
