@@ -164,9 +164,17 @@ class Viewer {
         this.setViewMode("wireframe");
         break;
       case "KeyX":
-        if (this.selected) {
+        if (this.selected && this.mode === "object") {
           const index = this.shapes.indexOf(this.selected);
           this.shapes.splice(index, 1);
+        }
+        if (
+          this.selectedVertex &&
+          this.mode === "edit" &&
+          this.selected instanceof Polygon
+        ) {
+          this.selected.deleteVertex(this.selectedVertex);
+          this.selectVertex(null);
         }
         break;
       case "KeyG":
