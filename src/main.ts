@@ -32,6 +32,13 @@ function setupButtons(viewer: Viewer) {
   const newRectangleButton = document.getElementById("rect");
   const newPolygonButton = document.getElementById("poly");
 
+  const modeDisplay = document.getElementById("mode");
+
+  viewer.onModeChanged = (mode) => {
+    console.log("mode");
+    modeDisplay.innerText = `${mode === "object" ? "Object" : "Edit"} mode`;
+  };
+
   solidViewButton.addEventListener("click", () => {
     viewer.setViewMode("solid");
   });

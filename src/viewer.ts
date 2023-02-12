@@ -35,6 +35,7 @@ class Viewer {
   private selected: Nullable<Shape> = null;
   private selectedVertex: Nullable<Vertex> = null;
   private canvas: HTMLCanvasElement;
+  onModeChanged: Nullable<(mode: Mode) => void> = null;
 
   constructor(canvas: HTMLCanvasElement) {
     // TODO: Try other contex, add guard
@@ -616,12 +617,15 @@ class Viewer {
   }
 
   switchMode() {
-    if (this.mode === "object") {
-      if (this.selected === null) return;
-      this.mode = "edit";
-      return;
+    switch (this.mode) {
+      case "edit":
+        this.mode = "object";
+        break;
+      case "object":
+        this.mode = this.selected ? "edit" : "object";
+        break;
     }
-    this.mode = "object";
+    if (this.onModeChanged) this.onModeChanged(this.mode);
   }
 
   normalizeCoord(coord: Vector2) {
