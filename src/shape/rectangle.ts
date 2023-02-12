@@ -1,7 +1,7 @@
-import { Color } from "../color";
 import { Transform } from "../geometry/transform";
 import { Vector2 } from "../geometry/vector";
 import { Vertex } from "../geometry/vertex";
+import { DEFAULT_SHAPE_COLOR } from "../util";
 import { Shape } from "./shape";
 
 type Quadrant = 0 | 1 | 2 | 3;
@@ -33,10 +33,10 @@ class Rectangle extends Shape {
   initVertices() {
     const l = this._length / 2;
     const w = this._width / 2;
-    const topRight = new Vertex(new Vector2(l, w), Color.black);
-    const topLeft = new Vertex(new Vector2(-l, w), Color.black);
-    const bottomLeft = new Vertex(new Vector2(-l, -w), Color.black);
-    const bottomRight = new Vertex(new Vector2(l, -w), Color.black);
+    const topRight = new Vertex(new Vector2(l, w), DEFAULT_SHAPE_COLOR);
+    const topLeft = new Vertex(new Vector2(-l, w), DEFAULT_SHAPE_COLOR);
+    const bottomLeft = new Vertex(new Vector2(-l, -w), DEFAULT_SHAPE_COLOR);
+    const bottomRight = new Vertex(new Vector2(l, -w), DEFAULT_SHAPE_COLOR);
 
     this._vertices = [topRight, topLeft, bottomLeft, bottomRight];
     this._vertices.forEach((v) => {

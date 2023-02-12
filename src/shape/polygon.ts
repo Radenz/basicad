@@ -1,7 +1,7 @@
-import { Color } from "../color";
 import { Transform } from "../geometry/transform";
 import { Vector2 } from "../geometry/vector";
 import { Vertex } from "../geometry/vertex";
+import { DEFAULT_SHAPE_COLOR } from "../util";
 import { Shape } from "./shape";
 
 class Polygon extends Shape {
@@ -11,7 +11,7 @@ class Polygon extends Shape {
 
   static regular(vertices: number, radius: number): Polygon {
     const polygon = new Polygon(Transform.origin);
-    let vertex = new Vertex(new Vector2(0, radius), Color.black);
+    let vertex = new Vertex(new Vector2(0, radius), DEFAULT_SHAPE_COLOR);
     polygon.addVertex(vertex);
     const angle = (Math.PI * 2) / vertices;
 
@@ -19,7 +19,7 @@ class Polygon extends Shape {
     while (vertices--) {
       const newPosition = vertex.position.clone();
       newPosition.rotate(angle, Vector2.zero);
-      vertex = new Vertex(newPosition, Color.black);
+      vertex = new Vertex(newPosition, DEFAULT_SHAPE_COLOR);
       polygon.addVertex(vertex);
     }
 

@@ -1,3 +1,4 @@
+import { Color } from "./color";
 import { Vector3 } from "./geometry/vector";
 
 type Nullable<T> = T | null;
@@ -12,6 +13,7 @@ const POSITION_SIZE = 2;
 const COLOR_SIZE = 3;
 
 const CLEAR_COLOR = new Vector3(0.5, 0.5, 0.5);
+const DEFAULT_SHAPE_COLOR = Color.rgb(64, 64, 64);
 const ORANGE = new Vector3(1, 0.568, 0);
 
 // * Derived constants
@@ -45,4 +47,5 @@ export {
   FRAME_DELTA_TIME,
   CLEAR_COLOR,
   ORANGE,
+  DEFAULT_SHAPE_COLOR,
 };

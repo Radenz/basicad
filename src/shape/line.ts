@@ -1,10 +1,9 @@
-import { Color } from "../color";
 import { Shape } from "./shape";
 import { Transform } from "../geometry/transform";
 import { Vector2 } from "../geometry/vector";
 import { Vertex } from "../geometry/vertex";
+import { DEFAULT_SHAPE_COLOR } from "../util";
 
-// TODO: handle on vertex change
 class Line extends Shape {
   constructor(transform: Transform, private _length: number) {
     super(transform);
@@ -14,8 +13,14 @@ class Line extends Shape {
 
   initVertices() {
     const halfDiag = (this._length / 2) * Math.SQRT2;
-    const vertexA = new Vertex(new Vector2(-halfDiag, -halfDiag), Color.black);
-    const vertexB = new Vertex(new Vector2(halfDiag, halfDiag), Color.black);
+    const vertexA = new Vertex(
+      new Vector2(-halfDiag, -halfDiag),
+      DEFAULT_SHAPE_COLOR
+    );
+    const vertexB = new Vertex(
+      new Vector2(halfDiag, halfDiag),
+      DEFAULT_SHAPE_COLOR
+    );
     this._vertices = [vertexA, vertexB];
     this._vertices.forEach((v) => {
       v.bind(this);
