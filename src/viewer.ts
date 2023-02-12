@@ -1,7 +1,7 @@
 import { Color } from "./color";
 import { Transform } from "./geometry/transform";
 import { Vector2, Vector3 } from "./geometry/vector";
-import type { Vertex } from "./geometry/vertex";
+import { Vertex } from "./geometry/vertex";
 import { Line } from "./shape/line";
 import { Polygon } from "./shape/polygon";
 import { Rectangle } from "./shape/rectangle";
@@ -201,9 +201,23 @@ class Viewer {
   }
 
   onClick(event: MouseEvent) {
+    if (event.ctrlKey) return this.onCtrlClick(event);
+
     this.mode === "object"
       ? this.trySelectShape(event)
       : this.trySelectVertex(event);
+  }
+
+  onCtrlClick(event: MouseEvent) {
+    if (this.mode === "object" || !(this.selected instanceof Polygon)) return;
+    const selected = this.selected as Polygon;
+    const vertex = new Vertex(Vector2.zero, Color.black);
+    selected.addVertex(vertex);
+    this.selectVertex(vertex);
+    const globalCoord = this.normalizeCoord(
+      new Vector2(event.clientX, event.clientY)
+    );
+    vertex.globalCoord = globalCoord;
   }
 
   trySelectShape(event: MouseEvent) {
