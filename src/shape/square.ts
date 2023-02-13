@@ -45,6 +45,10 @@ class Square extends Shape {
     return context.TRIANGLE_FAN;
   }
 
+  get name(): string {
+    return "Square";
+  }
+
   get size(): number {
     return this._size;
   }

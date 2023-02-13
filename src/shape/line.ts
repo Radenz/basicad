@@ -32,6 +32,10 @@ class Line extends Shape {
     return this._length;
   }
 
+  override get name() {
+    return "Line";
+  }
+
   set length(value) {
     const factor = value / this._length;
     this._vertices.forEach((v) => v.scale(factor));

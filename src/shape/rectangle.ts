@@ -45,6 +45,10 @@ class Rectangle extends Shape {
     });
   }
 
+  get name() {
+    return "Rectangle";
+  }
+
   set length(value: number) {
     const factor = value / this._length;
     this._vertices.forEach((v) => v.scaleX(factor));

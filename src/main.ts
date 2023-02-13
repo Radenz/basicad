@@ -1,5 +1,3 @@
-import { Color } from "./color";
-import { Transform } from "./geometry/transform";
 import { Viewer } from "./viewer";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -49,17 +47,39 @@ function setupButtons(viewer: Viewer) {
 
   newLineButton.addEventListener("click", () => {
     viewer.createDefaultLine();
+    updateObjectList(viewer);
   });
 
   newSquareButton.addEventListener("click", () => {
     viewer.createDefaultSquare();
+    updateObjectList(viewer);
   });
 
   newRectangleButton.addEventListener("click", () => {
     viewer.createDefaultRectangle();
+    updateObjectList(viewer);
   });
 
   newPolygonButton.addEventListener("click", () => {
     viewer.createDefaultPolygon();
+    updateObjectList(viewer);
+  });
+}
+
+// when a new object is created, update the object list
+function updateObjectList(viewer: Viewer) {
+  const objectList = document.getElementById("object-list");
+  objectList.innerHTML = "";
+
+  viewer.shapes.forEach((object) => {
+    const li = document.createElement("li");
+    li.innerText = object.name;
+    li.style.cursor = "pointer";
+    li.style.color = "blue";
+    li.style.textDecoration = "underline";
+    li.addEventListener("click", () => {
+      viewer.select(object);
+    });
+    objectList.appendChild(li);
   });
 }

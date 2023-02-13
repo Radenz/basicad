@@ -30,7 +30,7 @@ type Mode = "object" | "edit";
 
 class Viewer {
   private context: WebGLRenderingContext;
-  private shapes: Shape[];
+  public shapes: Shape[];
   private viewMode: ViewMode = "solid";
   private mode: Mode = "object";
   private selected: Nullable<Shape> = null;

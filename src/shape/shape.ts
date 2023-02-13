@@ -32,6 +32,10 @@ abstract class Shape {
     return this.dataCache;
   }
 
+  get name() : string {
+    return "Shape";
+  }
+
   get isHighlighted(): boolean {
     return this.highlight;
   }
