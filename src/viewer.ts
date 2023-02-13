@@ -11,6 +11,7 @@ import {
   B,
   CLEAR_COLOR,
   COLOR_SIZE,
+  DEFAULT_SHAPE_COLOR,
   FLOAT_SIZE,
   G,
   Nullable,
@@ -217,7 +218,7 @@ class Viewer {
   onCtrlClick(event: MouseEvent) {
     if (this.mode === "object" || !(this.selected instanceof Polygon)) return;
     const selected = this.selected as Polygon;
-    const vertex = new Vertex(Vector2.zero, Color.black);
+    const vertex = new Vertex(Vector2.zero, DEFAULT_SHAPE_COLOR);
     selected.addVertex(vertex);
     this.selectVertex(vertex);
     const globalCoord = this.normalizeCoord(
