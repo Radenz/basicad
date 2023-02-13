@@ -167,7 +167,7 @@ class Viewer {
         break;
       case "KeyH":
         if (this.mode === "object" && this.selected) {
-          this.selected.isHidden = true;
+          this.selected.isHidden = !this.selected.isHidden;
         }
         break;
       case "KeyX":
