@@ -364,7 +364,8 @@ class Viewer {
         window.removeEventListener("click", stopper);
 
         if (e instanceof KeyboardEvent) {
-          this.selectedVertex.position.set(initialPosition);
+          this.selectedVertex.position.x = initialPosition.x;
+          this.selectedVertex.position.y = initialPosition.y;
           this.selected.update();
         }
       }
