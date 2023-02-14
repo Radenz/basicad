@@ -1,5 +1,5 @@
 import { Transform } from "../geometry/transform";
-import { Vector2 } from "../geometry/vector";
+import { Vector2, Vector3 } from "../geometry/vector";
 import { Vertex } from "../geometry/vertex";
 import { DEFAULT_SHAPE_COLOR } from "../util";
 import { Shape } from "./shape";
@@ -281,6 +281,46 @@ class Polygon extends Shape {
   drawMode(context: WebGLRenderingContext): number {
     // return context.TRIANGLE_FAN;
     return context.TRIANGLES;
+  }
+
+  // ? Modifiers
+  subdivide(division: number) {
+    const newVertices = [];
+    const subdivisions = [];
+
+    for (let i = 1; i < division; i++) {
+      subdivisions.push(i / division);
+    }
+
+    for (let k = 0; k < this.vertexCount; k++) {
+      const vertex = this._vertices[k];
+      const nextVertex = this._vertices[(k + 1) % this.vertexCount];
+      const vertexPos = vertex.position;
+      const nextVertexPos = nextVertex.position;
+
+      const divisionVertices = [];
+
+      for (const factor of subdivisions) {
+        const newPos = Vector2.mix(vertexPos, nextVertexPos, 1 - factor);
+        const newColor = Vector3.mix(
+          vertex.color,
+          nextVertex.color,
+          1 - factor
+        );
+        const newVertex = new Vertex(newPos, newColor);
+        newVertex.bind(this);
+        newVertex.onChange = (_) => (this.needUpdate = true);
+        divisionVertices.push(newVertex);
+      }
+
+      newVertices.push(divisionVertices);
+    }
+
+    for (let k = this.vertexCount - 1; k >= 0; k--) {
+      this._vertices.splice(k + 1, 0, ...newVertices[k]);
+    }
+
+    this.needUpdate = true;
   }
 }
 

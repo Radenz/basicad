@@ -26,6 +26,15 @@ class Vector2 {
     return Math.sqrt(Vector2.squaredDistance(a, b));
   }
 
+  static mix(a: Vector2, b: Vector2, factor: number): Vector2 {
+    if (factor < 0) factor = 0;
+    if (factor > 1) factor = 1;
+    return new Vector2(
+      a.x * factor + b.x * (1 - factor),
+      a.y * factor + b.y * (1 - factor)
+    );
+  }
+
   get x(): number {
     return this._x;
   }
@@ -103,6 +112,16 @@ class Vector3 {
   }
 
   constructor(private _x: number, private _y: number, private _z: number) {}
+
+  static mix(a: Vector3, b: Vector3, factor: number): Vector3 {
+    if (factor < 0) factor = 0;
+    if (factor > 1) factor = 1;
+    return new Vector3(
+      a.x * factor + b.x * (1 - factor),
+      a.y * factor + b.y * (1 - factor),
+      a.z * factor + b.z * (1 - factor)
+    );
+  }
 
   get data(): number[] {
     return [this._x, this._y, this._z];
