@@ -61,6 +61,10 @@ class Vector2 {
     if (this.onChange) this.onChange(this);
   }
 
+  equals(other: Vector2): boolean {
+    return this._x === other._x && this._y == other._y;
+  }
+
   set(other: Vector2) {
     this._x = other.x;
     this._y = other.y;

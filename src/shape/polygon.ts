@@ -30,9 +30,6 @@ class Polygon extends Shape {
     if (this.needUpdate) {
       this.needUpdate = false;
       const triangles = this._triangulate();
-      triangles.forEach((t) => {
-        console.log(t.position.x, t.position.y);
-      });
       this.dataCache = triangles.map((v) => v.data).flat();
     }
     return this.dataCache;
@@ -74,7 +71,6 @@ class Polygon extends Shape {
   private deleteVertexByIndex(index: number) {
     if (index < 0 || index >= this.vertexCount) return;
     this._vertices.splice(index, 1);
-    console.log(this._vertices);
   }
 
   private _triangulate(): Vertex[] {
@@ -104,17 +100,16 @@ class Polygon extends Shape {
     vertex2: Vector2,
     vertex3: Vector2
   ) {
+    if (point.equals(vertex1) || point.equals(vertex2) || point.equals(vertex3))
+      return false;
+
     const triangleArea = Polygon.doubleTriangleArea(vertex1, vertex2, vertex3);
     const area1 = Polygon.doubleTriangleArea(point, vertex1, vertex2);
     const area2 = Polygon.doubleTriangleArea(point, vertex2, vertex3);
     const area3 = Polygon.doubleTriangleArea(point, vertex3, vertex1);
     const totalArea = area1 + area2 + area3;
 
-    return (
-      Math.abs(triangleArea - totalArea) < Number.EPSILON &&
-      // Stacking vertex workaround
-      triangleArea - totalArea != 0
-    );
+    return Math.abs(triangleArea - totalArea) < Number.EPSILON;
   }
 
   static doubleTriangleArea(a: Vector2, b: Vector2, c: Vector2) {
