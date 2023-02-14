@@ -322,6 +322,45 @@ class Polygon extends Shape {
 
     this.needUpdate = true;
   }
+
+  bevel(factor: number) {
+    if (factor < 0) factor = 0;
+    if (factor > 1) factor = 1;
+    factor /= 2;
+
+    const newVertices = [];
+
+    for (let k = 0; k < this.vertexCount; k++) {
+      const vertex = this._vertices[k];
+      const nextVertex = this._vertices[(k + 1) % this.vertexCount];
+      const prevVertex =
+        this._vertices[(k - 1 + this.vertexCount) % this.vertexCount];
+
+      const nextVertexPos = Vector2.mix(
+        vertex.position,
+        nextVertex.position,
+        1 - factor
+      );
+      const prevVertexPos = Vector2.mix(
+        vertex.position,
+        prevVertex.position,
+        1 - factor
+      );
+
+      const newNextVertex = new Vertex(nextVertexPos, DEFAULT_SHAPE_COLOR);
+      const newPrevVertex = new Vertex(prevVertexPos, DEFAULT_SHAPE_COLOR);
+
+      newNextVertex.bind(this);
+      newNextVertex.onChange = (_) => (this.needUpdate = true);
+      newPrevVertex.bind(this);
+      newPrevVertex.onChange = (_) => (this.needUpdate = true);
+
+      newVertices.push(newPrevVertex, newNextVertex);
+    }
+
+    this._vertices = [...newVertices];
+    this.needUpdate = true;
+  }
 }
 
 export { Polygon };
