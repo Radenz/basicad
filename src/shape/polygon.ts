@@ -28,13 +28,13 @@ class Polygon extends Shape {
 
   get data() {
     if (this.needUpdate) {
+      this.needUpdate = false;
       const triangles = this.triangulate();
       triangles.forEach((t) => {
         console.log(t.position.x, t.position.y);
       });
       this.dataCache = triangles.map((v) => v.data).flat();
     }
-    this.needUpdate = false;
     return this.dataCache;
   }
 
