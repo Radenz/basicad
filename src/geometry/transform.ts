@@ -42,6 +42,10 @@ class Transform {
   set scale(value: number) {
     this._scale = value;
   }
+
+  clone(): Transform {
+    return new Transform(this._position.clone(), this._rotation, this._scale);
+  }
 }
 
 export { Transform };

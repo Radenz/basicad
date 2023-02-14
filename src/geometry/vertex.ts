@@ -77,6 +77,10 @@ class Vertex {
     this.parent = parent;
   }
 
+  clone(): Vertex {
+    return new Vertex(this.position.clone(), this.color.clone());
+  }
+
   rotate(angle: number) {
     const origin = this.parentTransform.position;
     this.position.rotate(angle, origin);

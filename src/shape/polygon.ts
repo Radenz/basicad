@@ -29,7 +29,7 @@ class Polygon extends Shape {
   get data() {
     if (this.needUpdate) {
       this.needUpdate = false;
-      const triangles = this.triangulate();
+      const triangles = this._triangulate();
       triangles.forEach((t) => {
         console.log(t.position.x, t.position.y);
       });
@@ -77,7 +77,7 @@ class Polygon extends Shape {
     console.log(this._vertices);
   }
 
-  triangulate(): Vertex[] {
+  private _triangulate(): Vertex[] {
     const vertices = [...this._vertices];
     let convexVertices = Polygon.convexHull(vertices);
     const triangles = [];
@@ -360,6 +360,26 @@ class Polygon extends Shape {
 
     this._vertices = [...newVertices];
     this.needUpdate = true;
+  }
+
+  triangulate(): Polygon[] {
+    const vertices = this._triangulate();
+    const vertexGroups: Vertex[][] = [];
+
+    while (vertices.length > 0) {
+      vertexGroups.push(vertices.splice(0, 3));
+    }
+
+    const triangles: Polygon[] = [];
+    for (const vertexGroup of vertexGroups) {
+      const triangle = new Polygon(this.transform.clone());
+      triangle.addVertex(vertexGroup[0].clone());
+      triangle.addVertex(vertexGroup[1].clone());
+      triangle.addVertex(vertexGroup[2].clone());
+      triangles.push(triangle);
+    }
+
+    return triangles;
   }
 }
 
