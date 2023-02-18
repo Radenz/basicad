@@ -118,7 +118,7 @@ function setupButtons(viewer: Viewer) {
     division = isNaN(division) ? 2 : division;
     division = division <= 2 ? 2 : division;
 
-    viewer.currentObject.subdivide(2);
+    viewer.currentObject.subdivide(division);
   });
 
   bevelButton.addEventListener("click", () => {
