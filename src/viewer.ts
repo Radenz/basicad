@@ -538,6 +538,18 @@ class Viewer {
           0,
           data.length / VERTEX_SIZE
         );
+
+        const orderedVerticesData = shape.vertices.map((v) => v.data).flat();
+        this.context.bufferData(
+          this.context.ARRAY_BUFFER,
+          new Float32Array(orderedVerticesData),
+          this.context.DYNAMIC_DRAW
+        );
+        this.context.drawArrays(
+          this.context.LINE_LOOP,
+          0,
+          orderedVerticesData.length / VERTEX_SIZE
+        );
       }
 
       if (this.viewMode === "wireframe") {
