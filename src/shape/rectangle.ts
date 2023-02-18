@@ -103,10 +103,17 @@ class Rectangle extends Shape {
     topRightVertex.position.set(
       Vector2.multiplyEach(vertex.position, inverter)
     );
+    const invertedQuadrant =
+      topRightVertex.position.x * topRightVertex.position.y < 0;
 
     for (let i = 1; i < 4; i++) {
       const vertex = this._vertices[i];
       let converter = Rectangle.getMultiplier(i as Quadrant);
+      if (invertedQuadrant && i % 2 == 1) {
+        converter = converter.clone();
+        converter.scale(-1);
+      }
+
       vertex.position.set(
         Vector2.multiplyEach(topRightVertex.position, converter)
       );
