@@ -112,10 +112,16 @@ class Polygon extends Shape {
 
   private _triangulate(): Vertex[] {
     const vertices = [...this._vertices];
-    let convexVertices = Polygon.convexHull(vertices);
+    let convexVertices = Polygon.convex(vertices);
     const triangles = [];
     while (vertices.length > 3) {
-      const earIndex = Polygon.findEar(vertices, convexVertices);
+      let earIndex = Polygon.findEar(vertices, convexVertices);
+      if (earIndex === -1) {
+        convexVertices = Polygon.convex(vertices, true);
+        earIndex = Polygon.findEar(vertices, convexVertices);
+      }
+
+      if (earIndex === -1) earIndex = 0;
 
       const vertex1 =
         vertices[(earIndex - 1 + vertices.length) % vertices.length];
@@ -124,7 +130,7 @@ class Polygon extends Shape {
 
       triangles.push(vertex1, vertex2, vertex3);
       vertices.splice(earIndex, 1);
-      convexVertices = Polygon.convexHull(vertices);
+      convexVertices = Polygon.convex(vertices);
     }
     triangles.push(vertices[0], vertices[1], vertices[2]);
 
@@ -151,6 +157,33 @@ class Polygon extends Shape {
 
   static doubleTriangleArea(a: Vector2, b: Vector2, c: Vector2) {
     return Math.abs(a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y));
+  }
+
+  static convex(vertices: Vertex[], inverted: boolean = false): Vertex[] {
+    const convexVertices = [];
+    for (let i = 0; i < vertices.length; i++) {
+      const vertex1Index = i === 0 ? vertices.length - 1 : i - 1;
+      const vertex2Index = i;
+      const vertex3Index = (i + 1) % vertices.length;
+
+      const vertex1 = vertices[vertex1Index];
+      const vertex2 = vertices[vertex2Index];
+      const vertex3 = vertices[vertex3Index];
+
+      if (!inverted && Polygon.isConvex(vertex1, vertex2, vertex3))
+        convexVertices.push(vertex2);
+
+      if (inverted && Polygon.isConvex(vertex3, vertex2, vertex1))
+        convexVertices.push(vertex2);
+    }
+    return convexVertices;
+  }
+
+  static isConvex(vertex1: Vertex, vertex2: Vertex, vertex3: Vertex): boolean {
+    const vector1 = vertex2.position.sub(vertex1.position);
+    const vector2 = vertex3.position.sub(vertex2.position);
+
+    return Vector2.det(vector1, vector2) > 0;
   }
 
   static convexHull(
@@ -308,6 +341,8 @@ class Polygon extends Shape {
         }
       }
     }
+
+    return -1;
   }
 
   drawMode(context: WebGLRenderingContext): number {

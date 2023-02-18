@@ -35,6 +35,10 @@ class Vector2 {
     );
   }
 
+  static det(a: Vector2, b: Vector2): number {
+    return a.x * b.y - b.x * a.y;
+  }
+
   get x(): number {
     return this._x;
   }
