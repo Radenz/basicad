@@ -53,8 +53,9 @@ class Polygon extends Shape {
 
   finalize() {
     this.constructing = false;
-    const center = this.center;
-    const displacement = this.transform.position.sub(center);
+    const center = this.center.add(this.transform.position);
+    const displacement = this.center;
+    displacement.scale(-1);
     this.vertices.forEach((vertex) => {
       vertex.position.set(displacement.add(vertex.position));
     });
