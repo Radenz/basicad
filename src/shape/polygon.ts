@@ -110,6 +110,8 @@ class Polygon extends Shape {
     this._vertices.splice(index, 1);
   }
 
+  // Refer to:
+  // https://www.geometrictools.com/Documentation/TriangulationByEarClipping.pdf
   private _triangulate(): Vertex[] {
     const vertices = [...this._vertices];
     let convexVertices = Polygon.convex(vertices);

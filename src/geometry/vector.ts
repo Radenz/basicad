@@ -35,6 +35,8 @@ class Vector2 {
     );
   }
 
+  // Refer to:
+  // https://stackoverflow.com/questions/40410743/polygon-triangulation-reflex-vertex
   static det(a: Vector2, b: Vector2): number {
     return a.x * b.y - b.x * a.y;
   }
