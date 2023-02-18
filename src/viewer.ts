@@ -824,14 +824,44 @@ class Viewer {
     );
   }
 
-  createRectangle(
-    transform: Transform,
-    length: number,
-    width: number
-  ): Rectangle {
-    const rect = new Rectangle(transform, length, width);
-    this.addObject(rect);
-    return rect;
+  createRectangle() {
+    this.canvas.addEventListener(
+      "click",
+      (event: MouseEvent) => {
+        const firstCorner = this.normalizeCoord(
+          new Vector2(event.clientX, event.clientY)
+        );
+        const rectangle = Rectangle.fromCorner(firstCorner);
+        this.addObject(rectangle);
+
+        const moveController = new AbortController();
+        this.canvas.addEventListener(
+          "mousemove",
+          (event: MouseEvent) => {
+            const secondCorner = this.normalizeCoord(
+              new Vector2(event.clientX, event.clientY)
+            );
+            rectangle.setNextCorner(secondCorner);
+          },
+          { signal: moveController.signal } as AddEventListenerOptions
+        );
+
+        this.canvas.addEventListener(
+          "click",
+          (_: MouseEvent) => {
+            rectangle.finalize();
+            moveController.abort();
+            this.select(rectangle);
+          },
+          {
+            once: true,
+          }
+        );
+      },
+      {
+        once: true,
+      }
+    );
   }
 
   createPolygon(transform: Transform): Polygon {

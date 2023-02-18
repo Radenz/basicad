@@ -7,6 +7,8 @@ import { Shape } from "./shape";
 type Quadrant = 0 | 1 | 2 | 3;
 
 class Rectangle extends Shape {
+  private firstCornerPosition: Vector2 = null;
+
   static getMultiplier(index: Quadrant) {
     switch (index) {
       case 0:
@@ -28,6 +30,36 @@ class Rectangle extends Shape {
     super(transform);
     this.initVertices();
     this.needUpdate = true;
+  }
+
+  static fromCorner(position: Vector2): Rectangle {
+    const rectangle = new Rectangle(
+      new Transform(position.clone(), 0, 1),
+      0,
+      0
+    );
+    rectangle.firstCornerPosition = position.clone();
+    rectangle.constructing = true;
+    return rectangle;
+  }
+
+  setNextCorner(position: Vector2) {
+    if (!this.constructing) return;
+
+    const middle = Vector2.mix(this.firstCornerPosition, position, 0.5);
+    this.transform.x = middle.x;
+    this.transform.y = middle.y;
+    const relativeFirstCorner = middle.sub(this.firstCornerPosition);
+    this._vertices[0].position.x = relativeFirstCorner.x;
+    this._vertices[0].position.y = relativeFirstCorner.y;
+    this._vertices[2].position.x = -relativeFirstCorner.x;
+    this._vertices[2].position.y = -relativeFirstCorner.y;
+    this.needUpdate = true;
+  }
+
+  finalize() {
+    this.constructing = false;
+    this.firstCornerPosition = null;
   }
 
   initVertices() {
