@@ -37,6 +37,13 @@
         display: flex;
         gap: 8px;
       }
+      .custom-shape-btn-container {
+        position: absolute;
+        top: 40px;
+        left: 8px;
+        display: flex;
+        gap: 8px;
+      }
       .viewmode-btn-container {
         position: absolute;
         bottom: 12px;
@@ -59,10 +66,16 @@
       #basicad {
         display: flex;
       }
-      #mode {
+      #mode,
+      #action {
         font-size: 16px;
         font-family: sans-serif;
         color: white;
+      }
+      #action {
+        position: absolute;
+        top: 8px;
+        right: calc(100vw - 100vh + 8px);
       }
     </style>
   </head>
@@ -72,19 +85,34 @@
         <canvas id="canvas" width="1920" height="1920"> </canvas>
         <div class="shape-btn-container">
           <button id="line" class="hud-btn">
-            <span class="material-symbols-rounded">pen_size_2</span>
+            <span class="material-symbols-rounded fill">pen_size_2</span>
           </button>
           <button id="square" class="hud-btn">
-            <span class="material-symbols-rounded">square</span>
+            <span class="material-symbols-rounded fill">square</span>
           </button>
           <button id="rect" class="hud-btn">
-            <span class="material-symbols-rounded">rectangle</span>
+            <span class="material-symbols-rounded fill">rectangle</span>
           </button>
           <button id="poly" class="hud-btn">
-            <span class="material-symbols-rounded">pentagon</span>
+            <span class="material-symbols-rounded fill">pentagon</span>
           </button>
           <div id="mode">Object mode</div>
         </div>
+        <div class="custom-shape-btn-container">
+          <button id="line-custom" class="hud-btn">
+            <span class="material-symbols-rounded">pen_size_2</span>
+          </button>
+          <button id="square-custom" class="hud-btn">
+            <span class="material-symbols-rounded">square</span>
+          </button>
+          <button id="rect-custom" class="hud-btn">
+            <span class="material-symbols-rounded">rectangle</span>
+          </button>
+          <button id="poly-custom" class="hud-btn">
+            <span class="material-symbols-rounded">pentagon</span>
+          </button>
+        </div>
+        <div id="action"></div>
         <div class="viewmode-btn-container">
           <button id="solid" class="hud-btn">
             <span class="material-symbols-rounded fill">circle</span>

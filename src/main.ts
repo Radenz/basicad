@@ -39,6 +39,11 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     })
   );
+
+  const actionLabel = document.getElementById("action");
+  viewer.onNewAction((action) => {
+    actionLabel.innerText = action;
+  });
 });
 
 function setupButtons(viewer: Viewer) {
@@ -49,6 +54,11 @@ function setupButtons(viewer: Viewer) {
   const newSquareButton = document.getElementById("square");
   const newRectangleButton = document.getElementById("rect");
   const newPolygonButton = document.getElementById("poly");
+
+  const newCustomLineButton = document.getElementById("line-custom");
+  const newCustomSquareButton = document.getElementById("square-custom");
+  const newCustomRectangleButton = document.getElementById("rect-custom");
+  const newCustomPolygonButton = document.getElementById("poly-custom");
 
   const subdivButton = document.getElementById("mod-subdiv");
   const bevelButton = document.getElementById("mod-bevel");
@@ -70,6 +80,22 @@ function setupButtons(viewer: Viewer) {
 
   newLineButton.addEventListener("click", () => {
     viewer.createDefaultLine();
+  });
+
+  newCustomLineButton.addEventListener("click", () => {
+    viewer.createLine();
+  });
+
+  newCustomSquareButton.addEventListener("click", () => {
+    viewer.createSquare();
+  });
+
+  newCustomRectangleButton.addEventListener("click", () => {
+    viewer.createRectangle();
+  });
+
+  newCustomPolygonButton.addEventListener("click", () => {
+    viewer.createPolygon();
   });
 
   newSquareButton.addEventListener("click", () => {

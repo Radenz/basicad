@@ -42,6 +42,7 @@ class Viewer {
   private shapeSelectedListeners: Listener<Shape>[] = [];
   private shapeListChangedListeners: Listener<Shape[]>[] = [];
   private vertexSelectedListeners: Listener<Vertex>[] = [];
+  private actionUpdateListeners: Listener<string>[] = [];
 
   constructor(canvas: HTMLCanvasElement) {
     // TODO: Try other contex, add guard
@@ -177,6 +178,14 @@ class Viewer {
 
   onVertexSelected(listener: Listener<Vertex>) {
     this.vertexSelectedListeners.push(listener);
+  }
+
+  onNewAction(listener: Listener<string>) {
+    this.actionUpdateListeners.push(listener);
+  }
+
+  updateAction(action: string) {
+    this.actionUpdateListeners.forEach((listener) => listener(action));
   }
 
   onKeyPressed(code: string) {
@@ -760,6 +769,8 @@ class Viewer {
   }
 
   createSquare() {
+    this.updateAction("Creating square");
+
     this.canvas.addEventListener(
       "click",
       (event: MouseEvent) => {
@@ -787,6 +798,7 @@ class Viewer {
             square.finalize();
             moveController.abort();
             this.select(square);
+            this.updateAction("");
           },
           {
             once: true,
@@ -800,6 +812,8 @@ class Viewer {
   }
 
   createLine() {
+    this.updateAction("Creating line");
+
     this.canvas.addEventListener(
       "click",
       (event: MouseEvent) => {
@@ -827,6 +841,7 @@ class Viewer {
             line.finalize();
             moveController.abort();
             this.select(line);
+            this.updateAction("");
           },
           {
             once: true,
@@ -840,6 +855,8 @@ class Viewer {
   }
 
   createRectangle() {
+    this.updateAction("Creating rectangle");
+
     this.canvas.addEventListener(
       "click",
       (event: MouseEvent) => {
@@ -867,6 +884,7 @@ class Viewer {
             rectangle.finalize();
             moveController.abort();
             this.select(rectangle);
+            this.updateAction("");
           },
           {
             once: true,
@@ -880,6 +898,8 @@ class Viewer {
   }
 
   createPolygon() {
+    this.updateAction("Creating polygon");
+
     this.canvas.addEventListener(
       "click",
       (event: MouseEvent) => {
@@ -908,6 +928,7 @@ class Viewer {
               poly.finalize();
               addPointController.abort();
               this.select(poly);
+              this.updateAction("");
               return;
             }
 
