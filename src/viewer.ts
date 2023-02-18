@@ -41,6 +41,7 @@ class Viewer {
 
   private shapeSelectedListeners: Listener<Shape>[] = [];
   private shapeListChangedListeners: Listener<Shape[]>[] = [];
+  private vertexSelectedListeners: Listener<Vertex>[] = [];
 
   constructor(canvas: HTMLCanvasElement) {
     // TODO: Try other contex, add guard
@@ -169,6 +170,10 @@ class Viewer {
 
   onShapeListChanged(listener: Listener<Shape[]>) {
     this.shapeListChangedListeners.push(listener);
+  }
+
+  onVertexSelected(listener: Listener<Vertex>) {
+    this.vertexSelectedListeners.push(listener);
   }
 
   onKeyPressed(code: string) {
@@ -634,6 +639,9 @@ class Viewer {
 
   selectVertex(vertex: Nullable<Vertex>) {
     this.selectedVertex = vertex;
+    this.vertexSelectedListeners.forEach((listener) =>
+      listener(this.selectedVertex)
+    );
   }
 
   setViewMode(viewMode: ViewMode) {
