@@ -5,10 +5,38 @@ import { Vertex } from "../geometry/vertex";
 import { DEFAULT_SHAPE_COLOR } from "../util";
 
 class Line extends Shape {
+  private firstPoint: Vector2 = null;
+
   constructor(transform: Transform, private _length: number) {
     super(transform);
     this.initVertices();
     this.needUpdate = true;
+  }
+
+  static fromStart(position: Vector2): Line {
+    const line = new Line(new Transform(position.clone(), 0, 1), 0);
+    line.constructing = true;
+    line.firstPoint = position.clone();
+    return line;
+  }
+
+  setNextPoint(position: Vector2) {
+    if (!this.constructing) return;
+
+    const middle = Vector2.mix(this.firstPoint, position, 0.5);
+    this.transform.x = middle.x;
+    this.transform.y = middle.y;
+    const relativeFirstPoint = middle.sub(this.firstPoint);
+    this._vertices[0].position.x = relativeFirstPoint.x;
+    this._vertices[0].position.y = relativeFirstPoint.y;
+    this._vertices[1].position.x = -relativeFirstPoint.x;
+    this._vertices[1].position.y = -relativeFirstPoint.y;
+    this.needUpdate = true;
+  }
+
+  finalize() {
+    this.constructing = false;
+    this.firstPoint = null;
   }
 
   initVertices() {

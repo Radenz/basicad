@@ -784,10 +784,44 @@ class Viewer {
     );
   }
 
-  createLine(transform: Transform, length: number): Line {
-    const line = new Line(transform, length);
-    this.addObject(line);
-    return line;
+  createLine() {
+    this.canvas.addEventListener(
+      "click",
+      (event: MouseEvent) => {
+        const firstPoint = this.normalizeCoord(
+          new Vector2(event.clientX, event.clientY)
+        );
+        const line = Line.fromStart(firstPoint);
+        this.addObject(line);
+
+        const moveController = new AbortController();
+        this.canvas.addEventListener(
+          "mousemove",
+          (event: MouseEvent) => {
+            const secondPoint = this.normalizeCoord(
+              new Vector2(event.clientX, event.clientY)
+            );
+            line.setNextPoint(secondPoint);
+          },
+          { signal: moveController.signal } as AddEventListenerOptions
+        );
+
+        this.canvas.addEventListener(
+          "click",
+          (_: MouseEvent) => {
+            line.finalize();
+            moveController.abort();
+            this.select(line);
+          },
+          {
+            once: true,
+          }
+        );
+      },
+      {
+        once: true,
+      }
+    );
   }
 
   createRectangle(
