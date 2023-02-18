@@ -864,10 +864,47 @@ class Viewer {
     );
   }
 
-  createPolygon(transform: Transform): Polygon {
-    const p = new Polygon(transform);
-    this.addObject(p);
-    return p;
+  createPolygon() {
+    this.canvas.addEventListener(
+      "click",
+      (event: MouseEvent) => {
+        const firstPoint = this.normalizeCoord(
+          new Vector2(event.clientX, event.clientY)
+        );
+        const poly = Polygon.fromStart(firstPoint);
+        this.addObject(poly);
+
+        const addPointController = new AbortController();
+        this.canvas.addEventListener(
+          "mousemove",
+          (event: MouseEvent) => {
+            const secondCorner = this.normalizeCoord(
+              new Vector2(event.clientX, event.clientY)
+            );
+            poly.setNextPoint(secondCorner);
+          },
+          { signal: addPointController.signal } as AddEventListenerOptions
+        );
+
+        this.canvas.addEventListener(
+          "click",
+          (e: MouseEvent) => {
+            if (e.ctrlKey) {
+              poly.finalize();
+              addPointController.abort();
+              this.select(poly);
+              return;
+            }
+
+            poly.addNewPoint();
+          },
+          { signal: addPointController.signal } as AddEventListenerOptions
+        );
+      },
+      {
+        once: true,
+      }
+    );
   }
 }
 

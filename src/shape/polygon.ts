@@ -26,6 +26,43 @@ class Polygon extends Shape {
     return polygon;
   }
 
+  static fromStart(position: Vector2): Polygon {
+    const poly = new Polygon(new Transform(position.clone(), 0, 1));
+    poly.addVertex(new Vertex(Vector2.zero, DEFAULT_SHAPE_COLOR));
+    poly.addVertex(new Vertex(Vector2.zero, DEFAULT_SHAPE_COLOR));
+    poly.constructing = true;
+    return poly;
+  }
+
+  setNextPoint(position: Vector2) {
+    if (!this.constructing) return;
+    const lastVertex = this._vertices[this.vertexCount - 1];
+    const localPosition = position.sub(this.transform.position);
+    lastVertex.position.x = localPosition.x;
+    lastVertex.position.y = localPosition.y;
+    this.needUpdate = true;
+  }
+
+  addNewPoint() {
+    if (!this.constructing) return;
+    const lastVertex = this._vertices[this.vertexCount - 1];
+    this.addVertex(
+      new Vertex(lastVertex.position.clone(), DEFAULT_SHAPE_COLOR)
+    );
+  }
+
+  finalize() {
+    this.constructing = false;
+    const center = this.center;
+    const displacement = this.transform.position.sub(center);
+    this.vertices.forEach((vertex) => {
+      vertex.position.set(displacement.add(vertex.position));
+    });
+    this.transform.position.set(center);
+    console.log(this.transform.position);
+    this.needUpdate = true;
+  }
+
   get data() {
     if (this.needUpdate) {
       this.needUpdate = false;
