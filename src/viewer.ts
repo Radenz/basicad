@@ -514,6 +514,13 @@ class Viewer {
     for (const shape of this.shapes) {
       if (shape.isHidden) continue;
 
+      if (shape.constructing) {
+        const data = shape.vertices.map((v) => v.data).flat();
+        this.drawOutline(data, shape, ORANGE);
+        shape.vertices.forEach((vertex) => this.drawPoint(vertex, ORANGE));
+        continue;
+      }
+
       const data = Array.from(shape.data);
 
       if (this.viewMode === "solid") {
@@ -737,10 +744,44 @@ class Viewer {
     return polygon;
   }
 
-  createSquare(transform: Transform, size: number): Square {
-    const square = new Square(transform, size);
-    this.addObject(square);
-    return square;
+  createSquare() {
+    this.canvas.addEventListener(
+      "click",
+      (event: MouseEvent) => {
+        const firstCorner = this.normalizeCoord(
+          new Vector2(event.clientX, event.clientY)
+        );
+        const square = Square.fromCorner(firstCorner);
+        this.addObject(square);
+
+        const moveController = new AbortController();
+        this.canvas.addEventListener(
+          "mousemove",
+          (event: MouseEvent) => {
+            const secondCorner = this.normalizeCoord(
+              new Vector2(event.clientX, event.clientY)
+            );
+            square.setNextCorner(secondCorner);
+          },
+          { signal: moveController.signal } as AddEventListenerOptions
+        );
+
+        this.canvas.addEventListener(
+          "click",
+          (_: MouseEvent) => {
+            square.finalize();
+            moveController.abort();
+            this.select(square);
+          },
+          {
+            once: true,
+          }
+        );
+      },
+      {
+        once: true,
+      }
+    );
   }
 
   createLine(transform: Transform, length: number): Line {

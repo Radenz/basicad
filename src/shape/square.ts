@@ -5,10 +5,36 @@ import { DEFAULT_SHAPE_COLOR } from "../util";
 import { Shape } from "./shape";
 
 class Square extends Shape {
+  private firstCornerPosition: Vector2 = null;
+
   constructor(transform: Transform, private _size: number) {
     super(transform);
     this.initVertices();
     this.needUpdate = true;
+  }
+
+  static fromCorner(position: Vector2): Square {
+    const square = new Square(new Transform(position.clone(), 0, 1), 0);
+    square.firstCornerPosition = position.clone();
+    square.constructing = true;
+    return square;
+  }
+
+  setNextCorner(position: Vector2) {
+    if (!this.constructing) return;
+
+    const middle = Vector2.mix(this.firstCornerPosition, position, 0.5);
+    this.transform.x = middle.x;
+    this.transform.y = middle.y;
+    const relativeFirstCorner = middle.sub(this.firstCornerPosition);
+    this._vertices[0].position.x = relativeFirstCorner.x;
+    this._vertices[0].position.y = relativeFirstCorner.y;
+    this.needUpdate = true;
+  }
+
+  finalize() {
+    this.constructing = false;
+    this.firstCornerPosition = null;
   }
 
   initVertices() {

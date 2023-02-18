@@ -6,6 +6,7 @@ abstract class Shape {
   protected _vertices: Vertex[] = [];
   protected highlight: boolean = false;
   protected hidden: boolean = false;
+  constructing = false;
 
   protected dataCache: number[] = [];
   protected needUpdate: boolean = false;
