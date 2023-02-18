@@ -2,6 +2,7 @@ import { Color } from "./color";
 import { Vector3 } from "./geometry/vector";
 
 type Nullable<T> = T | null;
+type Listener<T> = (object: T) => any;
 
 // * Parameterized constants
 const FPS = 60;
@@ -32,6 +33,7 @@ const FRAME_DELTA_TIME = 1000 / FPS;
 
 export {
   Nullable,
+  Listener,
   FPS,
   POINT_RADIUS,
   FLOAT_SIZE,

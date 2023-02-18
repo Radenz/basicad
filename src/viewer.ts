@@ -5,7 +5,7 @@ import { Vertex } from "./geometry/vertex";
 import { Line } from "./shape/line";
 import { Polygon } from "./shape/polygon";
 import { Rectangle } from "./shape/rectangle";
-import type { Shape } from "./shape/shape";
+import { Shape } from "./shape/shape";
 import { Square } from "./shape/square";
 import {
   B,
@@ -14,6 +14,7 @@ import {
   DEFAULT_SHAPE_COLOR,
   FLOAT_SIZE,
   G,
+  Listener,
   Nullable,
   ORANGE,
   PARENT_POSITION_INDEX,
@@ -38,6 +39,9 @@ class Viewer {
   private canvas: HTMLCanvasElement;
   onModeChanged: Nullable<(mode: Mode) => void> = null;
 
+  private shapeSelectedListeners: Listener<Shape>[] = [];
+  private shapeListChangedListeners: Listener<Shape[]>[] = [];
+
   constructor(canvas: HTMLCanvasElement) {
     // TODO: Try other contex, add guard
     this.context = canvas.getContext("webgl")!;
@@ -47,6 +51,10 @@ class Viewer {
 
     this.setupEventListeners();
     this.setup().then(this.start.bind(this));
+  }
+
+  get currentObject(): Shape {
+    return this.selected;
   }
 
   async setup() {
@@ -142,9 +150,7 @@ class Viewer {
   }
 
   setupEventListeners() {
-    // TODO: implement
     window.addEventListener("keypress", (e: KeyboardEvent) => {
-      console.log(e);
       this.onKeyPressed(e.code);
     });
 
@@ -155,6 +161,14 @@ class Viewer {
     this.canvas.addEventListener("click", (e: PointerEvent) => {
       this.onClick(e);
     });
+  }
+
+  onShapeSelected(listener: Listener<Shape>) {
+    this.shapeSelectedListeners.push(listener);
+  }
+
+  onShapeListChanged(listener: Listener<Shape[]>) {
+    this.shapeListChangedListeners.push(listener);
   }
 
   onKeyPressed(code: string) {
@@ -172,8 +186,8 @@ class Viewer {
         break;
       case "KeyX":
         if (this.selected && this.mode === "object") {
-          const index = this.shapes.indexOf(this.selected);
-          this.shapes.splice(index, 1);
+          this.deleteObject(this.selected);
+          this.select(null);
         }
         if (
           this.selectedVertex &&
@@ -394,11 +408,8 @@ class Viewer {
       "mousemove",
       (e: MouseEvent) => {
         const initialPos = new Vector2(e.clientX, e.clientY);
-        console.log(selectedPos);
-        console.log(initialPos);
         // ? Negates because positive y is downwards
         initialAngle = -initialPos.sub(selectedPos).arc();
-        console.log("initialAngle", (initialAngle * 180) / Math.PI);
       },
       {
         once: true,
@@ -598,12 +609,27 @@ class Viewer {
     this.context.drawArrays(this.context.TRIANGLE_FAN, 0, 10);
   }
 
+  addObject(object: Shape) {
+    this.shapes.push(object);
+    this.shapeListChangedListeners.forEach((listener) => listener(this.shapes));
+  }
+
+  deleteObject(object: Shape | number) {
+    if (object instanceof Shape) {
+      const index = this.shapes.indexOf(object);
+      return this.deleteObject(index);
+    }
+    this.shapes.splice(object, 1);
+    this.shapeListChangedListeners.forEach((listener) => listener(this.shapes));
+  }
+
   select(object: Nullable<Shape>) {
     this.selectedVertex = null;
     for (const shape of this.shapes) {
       shape.isHighlighted = shape === object;
     }
     this.selected = object;
+    this.shapeSelectedListeners.forEach((listener) => listener(this.selected));
   }
 
   selectVertex(vertex: Nullable<Vertex>) {
@@ -653,7 +679,7 @@ class Viewer {
     length = length > 2 * Math.SQRT2 ? 0.4 : length;
     length = length <= 0 ? 0.4 : length;
     const line = new Line(Transform.origin, length);
-    this.shapes.push(line);
+    this.addObject(line);
     return line;
   }
 
@@ -664,7 +690,7 @@ class Viewer {
     size = size > 2 ? 0.25 : size;
     size = size <= 0 ? 0.25 : size;
     const square = new Square(Transform.origin, size);
-    this.shapes.push(square);
+    this.addObject(square);
     return square;
   }
 
@@ -682,7 +708,7 @@ class Viewer {
     width = width <= 0 ? 0.2 : width;
 
     const rectangle = new Rectangle(Transform.origin, length, width);
-    this.shapes.push(rectangle);
+    this.addObject(rectangle);
     return rectangle;
   }
 
@@ -699,19 +725,19 @@ class Viewer {
     size = size <= 0 ? 0.25 : size;
 
     const polygon = Polygon.regular(side, size);
-    this.shapes.push(polygon);
+    this.addObject(polygon);
     return polygon;
   }
 
   createSquare(transform: Transform, size: number): Square {
     const square = new Square(transform, size);
-    this.shapes.push(square);
+    this.addObject(square);
     return square;
   }
 
   createLine(transform: Transform, length: number): Line {
     const line = new Line(transform, length);
-    this.shapes.push(line);
+    this.addObject(line);
     return line;
   }
 
@@ -721,13 +747,13 @@ class Viewer {
     width: number
   ): Rectangle {
     const rect = new Rectangle(transform, length, width);
-    this.shapes.push(rect);
+    this.addObject(rect);
     return rect;
   }
 
   createPolygon(transform: Transform): Polygon {
     const p = new Polygon(transform);
-    this.shapes.push(p);
+    this.addObject(p);
     return p;
   }
 }

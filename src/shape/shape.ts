@@ -32,7 +32,7 @@ abstract class Shape {
     return this.dataCache;
   }
 
-  get name() : string {
+  get name(): string {
     return "Shape";
   }
 

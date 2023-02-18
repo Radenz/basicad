@@ -1,3 +1,4 @@
+import { Polygon } from "./shape/polygon";
 import { Viewer } from "./viewer";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -16,9 +17,28 @@ document.addEventListener("DOMContentLoaded", () => {
   // window["sq"] = sq;
   // window["ln"] = ln;
   // window["rect"] = rect;
-  // window["viewer"] = viewer;
+  window["viewer"] = viewer;
+  window["Polygon"] = Polygon;
 
   setupButtons(viewer);
+
+  const objectList = document.getElementById("object-list");
+  viewer.onShapeListChanged((objects) =>
+    window.requestAnimationFrame(() => {
+      objectList.innerHTML = "";
+      objects.forEach((object) => {
+        const li = document.createElement("li");
+        li.innerText = object.name;
+        li.style.cursor = "pointer";
+        li.style.color = "blue";
+        li.style.textDecoration = "underline";
+        li.addEventListener("click", () => {
+          viewer.select(object);
+        });
+        objectList.appendChild(li);
+      });
+    })
+  );
 });
 
 function setupButtons(viewer: Viewer) {
@@ -30,10 +50,13 @@ function setupButtons(viewer: Viewer) {
   const newRectangleButton = document.getElementById("rect");
   const newPolygonButton = document.getElementById("poly");
 
+  const subdivButton = document.getElementById("mod-subdiv");
+  const bevelButton = document.getElementById("mod-bevel");
+  const triangulateButton = document.getElementById("mod-tri");
+
   const modeDisplay = document.getElementById("mode");
 
   viewer.onModeChanged = (mode) => {
-    console.log("mode");
     modeDisplay.innerText = `${mode === "object" ? "Object" : "Edit"} mode`;
   };
 
@@ -47,39 +70,43 @@ function setupButtons(viewer: Viewer) {
 
   newLineButton.addEventListener("click", () => {
     viewer.createDefaultLine();
-    updateObjectList(viewer);
   });
 
   newSquareButton.addEventListener("click", () => {
     viewer.createDefaultSquare();
-    updateObjectList(viewer);
   });
 
   newRectangleButton.addEventListener("click", () => {
     viewer.createDefaultRectangle();
-    updateObjectList(viewer);
   });
 
   newPolygonButton.addEventListener("click", () => {
     viewer.createDefaultPolygon();
-    updateObjectList(viewer);
   });
-}
 
-// when a new object is created, update the object list
-function updateObjectList(viewer: Viewer) {
-  const objectList = document.getElementById("object-list");
-  objectList.innerHTML = "";
+  subdivButton.addEventListener("click", () => {
+    if (!(viewer.currentObject instanceof Polygon)) return;
 
-  viewer.shapes.forEach((object) => {
-    const li = document.createElement("li");
-    li.innerText = object.name;
-    li.style.cursor = "pointer";
-    li.style.color = "blue";
-    li.style.textDecoration = "underline";
-    li.addEventListener("click", () => {
-      viewer.select(object);
-    });
-    objectList.appendChild(li);
+    const divisionString = prompt("Division: (default 2)");
+    let division = parseInt(divisionString);
+    division = isNaN(division) ? 2 : division;
+    division = division <= 2 ? 2 : division;
+
+    viewer.currentObject.subdivide(2);
+  });
+
+  bevelButton.addEventListener("click", () => {
+    if (!(viewer.currentObject instanceof Polygon)) return;
+    const lengthString = prompt("Length: (0 to 1, default 0.2)");
+    let length = parseFloat(lengthString);
+    length = isNaN(length) ? 0.2 : length;
+    viewer.currentObject.bevel(length);
+  });
+
+  triangulateButton.addEventListener("click", () => {
+    if (!(viewer.currentObject instanceof Polygon)) return;
+    const triangles = viewer.currentObject.triangulate();
+    viewer.deleteObject(viewer.currentObject);
+    triangles.forEach(viewer.addObject.bind(viewer));
   });
 }
