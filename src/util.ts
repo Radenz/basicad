@@ -8,6 +8,7 @@ type Listener<T> = (object: T) => any;
 const FPS = 60;
 
 const POINT_RADIUS = 0.01;
+const ORIGIN_CURSOR_RADIUS = 0.02;
 const FLOAT_SIZE = 4;
 
 const POSITION_SIZE = 2;
@@ -36,6 +37,7 @@ export {
   Listener,
   FPS,
   POINT_RADIUS,
+  ORIGIN_CURSOR_RADIUS,
   FLOAT_SIZE,
   POSITION_SIZE,
   COLOR_SIZE,

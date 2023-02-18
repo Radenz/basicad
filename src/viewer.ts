@@ -17,6 +17,7 @@ import {
   Listener,
   Nullable,
   ORANGE,
+  ORIGIN_CURSOR_RADIUS,
   PARENT_POSITION_INDEX,
   PARENT_ROTATION_INDEX,
   PARENT_SCALE_INDEX,
@@ -28,6 +29,9 @@ import {
 
 type ViewMode = "solid" | "wireframe";
 type Mode = "object" | "edit";
+type NumberMap<V> = {
+  [key: number]: V;
+};
 
 class Viewer {
   private context: WebGLRenderingContext;
@@ -38,6 +42,8 @@ class Viewer {
   private selectedVertex: Nullable<Vertex> = null;
   private canvas: HTMLCanvasElement;
   onModeChanged: Nullable<(mode: Mode) => void> = null;
+
+  private originCache: NumberMap<NumberMap<number[]>> = {};
 
   private shapeSelectedListeners: Listener<Shape>[] = [];
   private shapeListChangedListeners: Listener<Shape[]>[] = [];
@@ -567,6 +573,21 @@ class Viewer {
       }
 
       if (shape === this.selected) {
+        if (this.mode === "object") {
+          const originData = this.getOriginData(shape.transform.position);
+          this.context.bufferData(
+            this.context.ARRAY_BUFFER,
+            new Float32Array(originData),
+            this.context.DYNAMIC_DRAW
+          );
+
+          this.context.drawArrays(
+            this.context.LINE_STRIP,
+            0,
+            originData.length / VERTEX_SIZE
+          );
+        }
+
         const highlightColor = this.mode === "object" ? ORANGE : Color.black;
         this.drawOutline(data, shape, highlightColor);
         shape.vertices.forEach((vertex) =>
@@ -580,6 +601,42 @@ class Viewer {
     }
 
     window.requestAnimationFrame(this.render.bind(this));
+  }
+
+  getOriginData(position: Vector2): number[] {
+    const { x, y } = position;
+    if (!this.originCache[x]) {
+      this.originCache[x] = {};
+    }
+
+    if (!this.originCache[x][y]) {
+      const vertex1 = new Vertex(
+        position.add(new Vector2(0, ORIGIN_CURSOR_RADIUS)),
+        Color.black
+      );
+      const vertex2 = new Vertex(
+        position.sub(new Vector2(0, ORIGIN_CURSOR_RADIUS)),
+        Color.black
+      );
+      const vertex3 = new Vertex(position, Color.black);
+      const vertex4 = new Vertex(
+        position.add(new Vector2(ORIGIN_CURSOR_RADIUS, 0)),
+        Color.black
+      );
+      const vertex5 = new Vertex(
+        position.sub(new Vector2(ORIGIN_CURSOR_RADIUS, 0)),
+        Color.black
+      );
+      this.originCache[x][y] = [
+        ...vertex1.data,
+        ...vertex2.data,
+        ...vertex3.data,
+        ...vertex4.data,
+        ...vertex5.data,
+      ];
+    }
+
+    return this.originCache[x][y];
   }
 
   drawOutline(verticesData: number[], shape: Shape, color: Vector3) {
