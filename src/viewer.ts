@@ -61,6 +61,9 @@ class Viewer {
   async setup() {
     this.context.clearColor(CLEAR_COLOR.x, CLEAR_COLOR.y, CLEAR_COLOR.z, 1.0);
 
+    this.context.enable(this.context.CULL_FACE);
+    this.context.cullFace(this.context.BACK);
+
     const vertexShader = this.context.createShader(this.context.VERTEX_SHADER)!;
     let res = await fetch("vbasic.glsl");
     const vertexShaderSource = await res.text();
