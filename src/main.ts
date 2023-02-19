@@ -64,6 +64,9 @@ function setupButtons(viewer: Viewer) {
   const bevelButton = document.getElementById("mod-bevel");
   const triangulateButton = document.getElementById("mod-tri");
 
+  const repositionOriginButton = document.getElementById("reposition-origin");
+  const flipNormalButton = document.getElementById("flip-normal");
+
   const modeDisplay = document.getElementById("mode");
 
   viewer.onModeChanged = (mode) => {
@@ -134,5 +137,15 @@ function setupButtons(viewer: Viewer) {
     const triangles = viewer.currentObject.triangulate();
     viewer.deleteObject(viewer.currentObject);
     triangles.forEach(viewer.addObject.bind(viewer));
+  });
+
+  repositionOriginButton.addEventListener("click", () => {
+    if (!(viewer.currentObject instanceof Polygon)) return;
+    viewer.currentObject.repositionOrigin();
+  });
+
+  flipNormalButton.addEventListener("click", () => {
+    if (!(viewer.currentObject instanceof Polygon)) return;
+    viewer.currentObject.flipNormal();
   });
 }

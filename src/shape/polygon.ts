@@ -445,11 +445,21 @@ class Polygon extends Shape {
       triangle.addVertex(vertexGroup[0].clone());
       triangle.addVertex(vertexGroup[1].clone());
       triangle.addVertex(vertexGroup[2].clone());
-      triangle.finalize();
+      triangle.repositionOrigin();
       triangles.push(triangle);
     }
 
     return triangles;
+  }
+
+  // ? Actions
+  repositionOrigin() {
+    this.finalize();
+  }
+
+  flipNormal() {
+    this.vertices.reverse();
+    this.needUpdate = true;
   }
 }
 
