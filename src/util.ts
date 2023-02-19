@@ -7,8 +7,8 @@ type Listener<T> = (object: T) => any;
 // * Parameterized constants
 const FPS = 60;
 
-const POINT_RADIUS = 0.01;
-const ORIGIN_CURSOR_RADIUS = 0.02;
+const POINT_RADIUS = 0.005;
+const ORIGIN_CURSOR_RADIUS = 0.01;
 const FLOAT_SIZE = 4;
 
 const POSITION_SIZE = 2;

@@ -293,8 +293,8 @@ class Viewer {
   trySelectShape(event: MouseEvent) {
     const canvasRect = this.canvas.getBoundingClientRect();
     const rectOffset = new Vector2(
-      event.offsetX - canvasRect.x,
-      event.offsetY - canvasRect.y
+      event.clientX - canvasRect.x,
+      event.clientY - canvasRect.y
     );
     rectOffset.scaleX(1 / canvasRect.width);
     rectOffset.scaleY(1 / canvasRect.height);
@@ -323,8 +323,8 @@ class Viewer {
   trySelectVertex(event: MouseEvent) {
     const canvasRect = this.canvas.getBoundingClientRect();
     const rectOffset = new Vector2(
-      event.offsetX - canvasRect.x,
-      event.offsetY - canvasRect.y
+      event.clientX - canvasRect.x,
+      event.clientY - canvasRect.y
     );
     rectOffset.scaleX(1 / canvasRect.width);
     rectOffset.scaleY(1 / canvasRect.height);
@@ -655,7 +655,6 @@ class Viewer {
         ...vertex4.data,
         ...vertex5.data,
       ];
-      if (position.equals(new Vector2(0, 0))) console.log(this.originCache);
       this.originCachePosition.set(position);
     }
 
