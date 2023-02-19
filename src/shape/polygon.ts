@@ -1,7 +1,7 @@
 import { Transform } from "../geometry/transform";
 import { Vector2, Vector3 } from "../geometry/vector";
 import { Vertex } from "../geometry/vertex";
-import { DEFAULT_SHAPE_COLOR } from "../util";
+import { DEFAULT_SHAPE_COLOR, VERTEX_SIZE } from "../util";
 import { Shape } from "./shape";
 
 class Polygon extends Shape {
@@ -347,9 +347,38 @@ class Polygon extends Shape {
     return -1;
   }
 
-  drawMode(context: WebGLRenderingContext): number {
-    // return context.TRIANGLE_FAN;
+  override drawMode(context: WebGLRenderingContext): number {
     return context.TRIANGLES;
+  }
+
+  override isInsideClickArea(point: Vector2): boolean {
+    const triangles = [...this.dataCache];
+    const triangleSize = 3 * VERTEX_SIZE;
+
+    for (let i = 0; i < triangles.length; i += triangleSize) {
+      let point1 = new Vector2(triangles[i], triangles[i + 1]);
+      let point2 = new Vector2(
+        triangles[i + VERTEX_SIZE],
+        triangles[i + VERTEX_SIZE + 1]
+      );
+      let point3 = new Vector2(
+        triangles[i + 2 * VERTEX_SIZE],
+        triangles[i + 2 * VERTEX_SIZE + 1]
+      );
+
+      point1.scale(this.transform.scale);
+      point2.scale(this.transform.scale);
+      point3.scale(this.transform.scale);
+      point1.rotate(this.transform.rotation, Vector2.zero);
+      point2.rotate(this.transform.rotation, Vector2.zero);
+      point3.rotate(this.transform.rotation, Vector2.zero);
+      point1 = point1.add(this.transform.position);
+      point2 = point2.add(this.transform.position);
+      point3 = point3.add(this.transform.position);
+
+      if (Polygon.isInTriangle(point, point1, point2, point3)) return true;
+    }
+    return false;
   }
 
   // ? Modifiers

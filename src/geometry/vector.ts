@@ -26,6 +26,26 @@ class Vector2 {
     return Math.sqrt(Vector2.squaredDistance(a, b));
   }
 
+  static between(vec: Vector2, bound1: Vector2, bound2: Vector2): boolean {
+    if (
+      vec.x >= bound1.x &&
+      vec.x <= bound2.x &&
+      vec.y >= bound1.y &&
+      vec.y <= bound2.y
+    )
+      return true;
+
+    if (
+      vec.x >= bound2.x &&
+      vec.x <= bound1.x &&
+      vec.y >= bound2.y &&
+      vec.y <= bound1.y
+    )
+      return true;
+
+    return false;
+  }
+
   static mix(a: Vector2, b: Vector2, factor: number): Vector2 {
     if (factor < 0) factor = 0;
     if (factor > 1) factor = 1;
@@ -55,6 +75,10 @@ class Vector2 {
 
   get magnitude(): number {
     return Math.sqrt(this._x * this._x + this._y * this._y);
+  }
+
+  get slope() {
+    return this._y / this._x;
   }
 
   set x(value: number) {
@@ -114,6 +138,42 @@ class Vector2 {
   scaleY(factor: number) {
     this._y *= factor;
   }
+
+  distanceTo(line: [Vector2, Vector2]): number {
+    const p0 = this;
+    const p1 = line[0];
+    const p2 = line[1];
+
+    const direction = p2.sub(p1);
+    const denom = direction.magnitude;
+
+    let inBound =
+      p1.y == p2.y
+        ? between(p0.x, p1.x, p2.x)
+        : (() => {
+            const crossSlope = Math.tan(direction.arc() + Math.PI / 2);
+
+            const offset1 = p1.y - crossSlope * p1.x;
+            const offset2 = p2.y - crossSlope * p2.x;
+
+            const yBound1 = crossSlope * p0.x + offset1;
+            const yBound2 = crossSlope * p0.x + offset2;
+
+            return between(p0.y, yBound1, yBound2);
+          })();
+
+    if (!inBound)
+      return Math.min(Vector2.distance(p0, p1), Vector2.distance(p0, p2));
+
+    const num = Math.abs(
+      (p2.x - p1.x) * (p1.y - p0.y) - (p1.x - p0.x) * (p2.y - p1.y)
+    );
+    return num / denom;
+  }
+}
+
+function between(a: number, bound1: number, bound2: number): boolean {
+  return (bound1 <= a && a <= bound2) || (bound2 <= a && a <= bound1);
 }
 
 class Vector3 {

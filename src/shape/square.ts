@@ -71,6 +71,12 @@ class Square extends Shape {
     return context.TRIANGLE_FAN;
   }
 
+  override isInsideClickArea(point: Vector2): boolean {
+    const vertex1 = this.vertices[0];
+    const vertex3 = this.vertices[2];
+    return Vector2.between(point, vertex1.globalCoord, vertex3.globalCoord);
+  }
+
   get name(): string {
     return "Square";
   }

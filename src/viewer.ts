@@ -304,20 +304,11 @@ class Viewer {
     );
     normalizedCoord.scaleY(-1);
 
-    let selectedShape = null;
-    let minDistance = 2;
-    for (const shape of this.shapes) {
-      const shapeDistance = Vector2.distance(
-        normalizedCoord,
-        shape.transform.position
-      );
-      if (shapeDistance < minDistance) {
-        selectedShape = shape;
-        minDistance = shapeDistance;
-      }
+    for (const shape of [...this.shapes].reverse()) {
+      if (shape.isInsideClickArea(normalizedCoord)) return this.select(shape);
     }
 
-    this.select(minDistance <= 0.1 ? selectedShape : null);
+    this.select(null);
   }
 
   trySelectVertex(event: MouseEvent) {

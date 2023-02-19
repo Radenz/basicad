@@ -2,7 +2,7 @@ import { Shape } from "./shape";
 import { Transform } from "../geometry/transform";
 import { Vector2 } from "../geometry/vector";
 import { Vertex } from "../geometry/vertex";
-import { DEFAULT_SHAPE_COLOR } from "../util";
+import { DEFAULT_SHAPE_COLOR, LINE_CLICK_RANGE } from "../util";
 
 class Line extends Shape {
   private firstPoint: Vector2 = null;
@@ -80,6 +80,15 @@ class Line extends Shape {
 
   override drawMode(context: WebGLRenderingContext) {
     return context.LINE_STRIP;
+  }
+
+  override isInsideClickArea(point: Vector2): boolean {
+    const vertex1 = this._vertices[0];
+    const vertex2 = this._vertices[1];
+    return (
+      point.distanceTo([vertex1.globalCoord, vertex2.globalCoord]) <=
+      LINE_CLICK_RANGE
+    );
   }
 }
 

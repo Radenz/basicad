@@ -26,6 +26,8 @@ abstract class Shape {
 
   abstract drawMode(context: WebGLRenderingContext): number;
 
+  abstract isInsideClickArea(point: Vector2): boolean;
+
   get data(): number[] {
     if (this.needUpdate)
       this.dataCache = this._vertices.map((v) => v.data).flat();
