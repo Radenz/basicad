@@ -60,7 +60,6 @@ class Polygon extends Shape {
       vertex.position.set(displacement.add(vertex.position));
     });
     this.transform.position.set(center);
-    console.log(this.transform.position);
     this.needUpdate = true;
   }
 
@@ -446,6 +445,7 @@ class Polygon extends Shape {
       triangle.addVertex(vertexGroup[0].clone());
       triangle.addVertex(vertexGroup[1].clone());
       triangle.addVertex(vertexGroup[2].clone());
+      triangle.finalize();
       triangles.push(triangle);
     }
 
