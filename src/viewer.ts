@@ -802,28 +802,28 @@ class Viewer {
   }
 
   createDefaultSquare(): Square {
-    const sizeString = prompt("Square size: (default 0.25)");
+    const sizeString = prompt("Square size: (default 0.2)");
     let size = parseFloat(sizeString);
-    size = isNaN(size) ? 0.25 : size;
-    size = size > 2 ? 0.25 : size;
-    size = size <= 0 ? 0.25 : size;
+    size = isNaN(size) ? 0.2 : size;
+    size = size > 2 ? 0.2 : size;
+    size = size <= 0 ? 0.2 : size;
     const square = new Square(Transform.origin, size);
     this.addObject(square);
     return square;
   }
 
   createDefaultRectangle(): Rectangle {
-    const lengthString = prompt("Rectangle length: (default 0.6)");
+    const lengthString = prompt("Rectangle length: (default 0.4)");
     let length = parseFloat(lengthString);
-    length = isNaN(length) ? 0.6 : length;
-    length = length > 2 ? 0.6 : length;
-    length = length <= 0 ? 0.6 : length;
+    length = isNaN(length) ? 0.4 : length;
+    length = length > 2 ? 0.4 : length;
+    length = length <= 0 ? 0.4 : length;
 
-    const widthString = prompt("Rectangle width: (default 0.2)");
+    const widthString = prompt("Rectangle width: (default 0.15)");
     let width = parseFloat(widthString);
-    width = isNaN(width) ? 0.2 : width;
-    width = width > 2 ? 0.2 : width;
-    width = width <= 0 ? 0.2 : width;
+    width = isNaN(width) ? 0.15 : width;
+    width = width > 2 ? 0.15 : width;
+    width = width <= 0 ? 0.15 : width;
 
     const rectangle = new Rectangle(Transform.origin, length, width);
     this.addObject(rectangle);
@@ -836,11 +836,11 @@ class Viewer {
     side = isNaN(side) ? 0.25 : side;
     side = side <= 2 ? 5 : side;
 
-    const sizeString = prompt("Polygon size: (default 0.3)");
+    const sizeString = prompt("Polygon size: (default 0.2)");
     let size = parseFloat(sizeString);
-    size = isNaN(size) ? 0.25 : size;
-    size = size > 2 ? 0.25 : size;
-    size = size <= 0 ? 0.25 : size;
+    size = isNaN(size) ? 0.2 : size;
+    size = size > 2 ? 0.2 : size;
+    size = size <= 0 ? 0.2 : size;
 
     const polygon = Polygon.regular(side, size);
     this.addObject(polygon);
