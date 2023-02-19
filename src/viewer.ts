@@ -29,9 +29,6 @@ import {
 
 type ViewMode = "solid" | "wireframe";
 type Mode = "object" | "edit";
-type NumberMap<V> = {
-  [key: number]: V;
-};
 
 class Viewer {
   private context: WebGLRenderingContext;
@@ -43,7 +40,8 @@ class Viewer {
   private canvas: HTMLCanvasElement;
   onModeChanged: Nullable<(mode: Mode) => void> = null;
 
-  private originCache: NumberMap<NumberMap<number[]>> = {};
+  private originCache: number[] = [];
+  private originCachePosition: Vector2 = new Vector2(0, 0);
 
   private shapeSelectedListeners: Listener<Shape>[] = [];
   private shapeListChangedListeners: Listener<Shape[]>[] = [];
@@ -58,6 +56,7 @@ class Viewer {
     this.context.viewport(0, 0, canvas.width, canvas.height);
 
     this.setupEventListeners();
+    this.setDefaultOriginCache();
     this.setup().then(this.start.bind(this));
   }
 
@@ -172,6 +171,33 @@ class Viewer {
     this.canvas.addEventListener("click", (e: PointerEvent) => {
       this.onClick(e);
     });
+  }
+
+  setDefaultOriginCache() {
+    const vertex1 = new Vertex(
+      new Vector2(0, ORIGIN_CURSOR_RADIUS),
+      Color.black
+    );
+    const vertex2 = new Vertex(
+      new Vector2(0, -ORIGIN_CURSOR_RADIUS),
+      Color.black
+    );
+    const vertex3 = new Vertex(Vector2.zero, Color.black);
+    const vertex4 = new Vertex(
+      new Vector2(ORIGIN_CURSOR_RADIUS, 0),
+      Color.black
+    );
+    const vertex5 = new Vertex(
+      new Vector2(-ORIGIN_CURSOR_RADIUS, 0),
+      Color.black
+    );
+    this.originCache = [
+      ...vertex1.data,
+      ...vertex2.data,
+      ...vertex3.data,
+      ...vertex4.data,
+      ...vertex5.data,
+    ];
   }
 
   onShapeSelected(listener: Listener<Shape>) {
@@ -604,12 +630,7 @@ class Viewer {
   }
 
   getOriginData(position: Vector2): number[] {
-    const { x, y } = position;
-    if (!this.originCache[x]) {
-      this.originCache[x] = {};
-    }
-
-    if (!this.originCache[x][y]) {
+    if (!this.originCachePosition.equals(position)) {
       const vertex1 = new Vertex(
         position.add(new Vector2(0, ORIGIN_CURSOR_RADIUS)),
         Color.black
@@ -627,16 +648,18 @@ class Viewer {
         position.sub(new Vector2(ORIGIN_CURSOR_RADIUS, 0)),
         Color.black
       );
-      this.originCache[x][y] = [
+      this.originCache = [
         ...vertex1.data,
         ...vertex2.data,
         ...vertex3.data,
         ...vertex4.data,
         ...vertex5.data,
       ];
+      if (position.equals(new Vector2(0, 0))) console.log(this.originCache);
+      this.originCachePosition.set(position);
     }
 
-    return this.originCache[x][y];
+    return this.originCache;
   }
 
   drawOutline(verticesData: number[], shape: Shape, color: Vector3) {
