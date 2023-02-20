@@ -231,6 +231,9 @@ class Viewer {
       case "KeyH":
         if (this.mode === "object" && this.selected) {
           this.selected.isHidden = !this.selected.isHidden;
+          this.shapeListChangedListeners.forEach((listener) =>
+            listener(this.shapes)
+          );
         }
         break;
       case "KeyX":
@@ -736,6 +739,7 @@ class Viewer {
     }
     this.selected = object;
     this.shapeSelectedListeners.forEach((listener) => listener(this.selected));
+    this.shapeListChangedListeners.forEach((listener) => listener(this.shapes));
   }
 
   selectVertex(vertex: Nullable<Vertex>) {

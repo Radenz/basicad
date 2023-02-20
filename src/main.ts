@@ -30,8 +30,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const li = document.createElement("li");
         li.innerText = object.name;
         li.style.cursor = "pointer";
-        li.style.color = "blue";
-        li.style.textDecoration = "underline";
+        li.classList.add("object-name");
+        if (viewer.currentObject === object) {
+          li.classList.add("selected");
+        }
+        if (object.isHidden) {
+          li.classList.add("hidden");
+        }
         li.addEventListener("click", () => {
           viewer.select(object);
         });
