@@ -58,13 +58,13 @@
         height: calc(40vh - 6px);
         background-color: rgb(128, 128, 128);
         border-radius: 4px;
-        overflow: hidden;
+        overflow-y: auto;
       }
       #properties-panel {
         height: calc(60vh - 6px);
         background-color: rgb(128, 128, 128);
         border-radius: 4px;
-        overflow: hidden;
+        overflow-y: auto;
       }
       .shape-btn-container {
         position: fixed;
@@ -87,7 +87,14 @@
         display: flex;
         gap: 8px;
       }
-      .hud-btn {
+      .mod-btn-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 4px;
+      }
+      .hud-btn,
+      .mod-btn {
         display: flex;
         cursor: pointer;
         align-items: center;
@@ -95,6 +102,14 @@
         border-radius: 4px;
         padding: 2px;
         border: 0px;
+      }
+      .mod-btn {
+        font-size: 12px;
+        font-family: "Public Sans";
+        color: white;
+        text-shadow: 0 0 2px black;
+        background-color: rgba(0, 0, 0, 0.3);
+        padding: 4px;
       }
       .hud-btn span {
         font-size: 20px;
@@ -202,19 +217,26 @@
         <div id="collection-panel">
           <h4 class="panel-title">Object List</h4>
           <div id="object-list"></div>
-          <button id="save">Save</button>
         </div>
         <div id="properties-panel">
           <h4 class="panel-title">Properties</h4>
-          <h5>Modifiers</h5>
-          <button id="mod-subdiv" class="hud-btn">Subdivide</button>
-          <button id="mod-bevel" class="hud-btn">Bevel</button>
-          <button id="mod-tri" class="hud-btn">Triangulate</button>
-          <h5>Actions</h5>
-          <button id="reposition-origin" class="hud-btn">
-            Reposition Origin to Center
-          </button>
-          <button id="flip-normal" class="hud-btn">Flip Normal</button>
+          <h4 class="panel-title">Modifiers</h4>
+          <div class="mod-btn-container">
+            <button id="mod-subdiv" class="mod-btn">Subdivide</button>
+            <button id="mod-bevel" class="mod-btn">Bevel</button>
+            <button id="mod-tri" class="mod-btn">Triangulate</button>
+          </div>
+          <h4 class="panel-title">Actions</h4>
+          <div class="mod-btn-container">
+            <button id="reposition-origin" class="mod-btn">
+              Reposition Origin to Center
+            </button>
+            <button id="flip-normal" class="mod-btn">Flip Normal</button>
+          </div>
+          <h4 class="panel-title">Import/Export</h4>
+          <div class="mod-btn-container">
+            <button id="save" class="mod-btn">Save</button>
+          </div>
         </div>
       </div>
     </div>
