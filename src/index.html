@@ -32,6 +32,29 @@
         font-variation-settings: "FILL" 1, "wght" 300, "GRAD" 0, "opsz" 48;
         color: gray;
       }
+      #canvas-container {
+        height: calc(100vh - 8px);
+        box-sizing: border-box;
+        overflow: hidden;
+        border-radius: 4px;
+      }
+      #editor-panel {
+        height: calc(100vh - 8px);
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      #collection-panel {
+        height: calc(40vh - 6px);
+        background-color: rgb(128, 128, 128);
+        border-radius: 4px;
+      }
+      #properties-panel {
+        height: calc(60vh - 6px);
+        background-color: rgb(128, 128, 128);
+        border-radius: 4px;
+      }
       .shape-btn-container {
         position: fixed;
         top: 8px;
@@ -67,6 +90,8 @@
       }
       #basicad {
         display: flex;
+        margin: 4px;
+        gap: 4px;
       }
       #mode,
       #action {
@@ -124,20 +149,24 @@
           </button>
         </div>
       </div>
-      <div id="">
-        <h4>Object List</h4>
-        <div id="object-list"></div>
-        <button id="save">Save</button>
-        <h4>Properties</h4>
-        <h5>Modifiers</h5>
-        <button id="mod-subdiv" class="hud-btn">Subdivide</button>
-        <button id="mod-bevel" class="hud-btn">Bevel</button>
-        <button id="mod-tri" class="hud-btn">Triangulate</button>
-        <h5>Actions</h5>
-        <button id="reposition-origin" class="hud-btn">
-          Reposition Origin to Center
-        </button>
-        <button id="flip-normal" class="hud-btn">Flip Normal</button>
+      <div id="editor-panel">
+        <div id="collection-panel">
+          <h4>Object List</h4>
+          <div id="object-list"></div>
+          <button id="save">Save</button>
+        </div>
+        <div id="properties-panel">
+          <h4>Properties</h4>
+          <h5>Modifiers</h5>
+          <button id="mod-subdiv" class="hud-btn">Subdivide</button>
+          <button id="mod-bevel" class="hud-btn">Bevel</button>
+          <button id="mod-tri" class="hud-btn">Triangulate</button>
+          <h5>Actions</h5>
+          <button id="reposition-origin" class="hud-btn">
+            Reposition Origin to Center
+          </button>
+          <button id="flip-normal" class="hud-btn">Flip Normal</button>
+        </div>
       </div>
     </div>
   </body>
