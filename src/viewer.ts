@@ -308,6 +308,7 @@ class Viewer {
     normalizedCoord.scaleY(-1);
 
     for (const shape of [...this.shapes].reverse()) {
+      if (shape.isHidden) continue;
       if (shape.isInsideClickArea(normalizedCoord)) return this.select(shape);
     }
 
