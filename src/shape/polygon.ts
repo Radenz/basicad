@@ -2,11 +2,26 @@ import { Transform } from "../geometry/transform";
 import { Vector2, Vector3 } from "../geometry/vector";
 import { Vertex } from "../geometry/vertex";
 import { DEFAULT_SHAPE_COLOR, VERTEX_SIZE } from "../util";
-import { Shape } from "./shape";
+import { Shape, ShapeData } from "./shape";
 
 class Polygon extends Shape {
   constructor(transform: Transform) {
     super(transform);
+  }
+
+  static deserialize(data: ShapeData): Polygon {
+    const transform = Transform.deserialize(data.transform);
+
+    const vertices = data.vertices.map((vertexData) =>
+      Vertex.deserialize(vertexData)
+    );
+
+    const polygon = new Polygon(transform);
+    vertices.forEach((vertex) => {
+      polygon.addVertex(vertex);
+    });
+
+    return polygon;
   }
 
   static regular(vertices: number, radius: number): Polygon {
@@ -379,6 +394,10 @@ class Polygon extends Shape {
       if (Polygon.isInTriangle(point, point1, point2, point3)) return true;
     }
     return false;
+  }
+
+  override type(): string {
+    return "polygon";
   }
 
   // ? Modifiers

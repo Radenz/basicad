@@ -1,8 +1,8 @@
 import { Transform } from "../geometry/transform";
-import { Vector2 } from "../geometry/vector";
+import { Vector2, Vector3 } from "../geometry/vector";
 import { Vertex } from "../geometry/vertex";
 import { DEFAULT_SHAPE_COLOR } from "../util";
-import { Shape } from "./shape";
+import { Shape, ShapeData } from "./shape";
 
 class Square extends Shape {
   private firstCornerPosition: Vector2 = null;
@@ -11,6 +11,27 @@ class Square extends Shape {
     super(transform);
     this.initVertices();
     this.needUpdate = true;
+  }
+
+  static deserialize(data: ShapeData): Square {
+    const rawTransform = data.transform;
+    const transform = Transform.deserialize(rawTransform);
+    const { vertices } = data;
+    const vertex1Pos = Vector2.deserialize(vertices[0].position);
+    const vertex3Pos = Vector2.deserialize(vertices[2].position);
+
+    const square = Square.fromCorner(vertex1Pos);
+    square.setNextCorner(vertex3Pos);
+    square.finalize();
+    square.translate(transform.position);
+    square.rotate(transform.rotation);
+    square.scale(transform.scale);
+
+    for (let i = 0; i < 4; i++) {
+      square.vertices[i].color = Vector3.deserialize(vertices[i].color);
+    }
+
+    return square;
   }
 
   static fromCorner(position: Vector2): Square {
@@ -75,6 +96,10 @@ class Square extends Shape {
     const vertex1 = this.vertices[0];
     const vertex3 = this.vertices[2];
     return Vector2.between(point, vertex1.globalCoord, vertex3.globalCoord);
+  }
+
+  override type(): string {
+    return "square";
   }
 
   get name(): string {

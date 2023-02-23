@@ -11,6 +11,19 @@ class Transform {
     return new Transform(Vector2.zero, 0, 1);
   }
 
+  serialize(): TransformData {
+    return {
+      position: this.position.serialize(),
+      rotation: this.rotation,
+      scale: this.scale,
+    };
+  }
+
+  static deserialize(data: TransformData): Transform {
+    const { position, rotation, scale } = data;
+    return new Transform(Vector2.deserialize(position), rotation, scale);
+  }
+
   get position(): Vector2 {
     return this._position;
   }
@@ -48,4 +61,10 @@ class Transform {
   }
 }
 
-export { Transform };
+interface TransformData {
+  position: number[];
+  rotation: number;
+  scale: number;
+}
+
+export { Transform, TransformData };

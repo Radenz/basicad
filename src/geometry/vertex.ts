@@ -13,6 +13,20 @@ class Vertex {
     };
   }
 
+  serialize(): VertexData {
+    return {
+      position: this.position.serialize(),
+      color: this.color.serialize(),
+    };
+  }
+
+  static deserialize(data: VertexData): Vertex {
+    return new Vertex(
+      Vector2.deserialize(data.position),
+      Vector3.deserialize(data.color)
+    );
+  }
+
   origin() {
     return new Vertex(Vector2.zero, Vector3.zero);
   }
@@ -99,4 +113,9 @@ class Vertex {
   }
 }
 
-export { Vertex };
+interface VertexData {
+  position: [number, number];
+  color: [number, number, number];
+}
+
+export { Vertex, VertexData };

@@ -1,4 +1,8 @@
+import { Line } from "./shape/line";
 import { Polygon } from "./shape/polygon";
+import { Rectangle } from "./shape/rectangle";
+import { Shape } from "./shape/shape";
+import { Square } from "./shape/square";
 import { Viewer } from "./viewer";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -73,6 +77,13 @@ function setupButtons(viewer: Viewer) {
   const flipNormalButton = document.getElementById("flip-normal");
 
   const modeDisplay = document.getElementById("mode");
+
+  const importButton = document.getElementById("import");
+  const exportButton = document.getElementById("export");
+  const importFileInput = document.getElementById(
+    "import-file"
+  ) as HTMLInputElement;
+  importFileInput.addEventListener("input", () => {});
 
   viewer.onModeChanged = (mode) => {
     modeDisplay.innerText = `${mode === "object" ? "Object" : "Edit"} mode`;
@@ -153,4 +164,63 @@ function setupButtons(viewer: Viewer) {
     if (!(viewer.currentObject instanceof Polygon)) return;
     viewer.currentObject.flipNormal();
   });
+
+  exportButton.addEventListener("click", () => {
+    if (!viewer.currentObject) return;
+
+    const shapeData = viewer.currentObject.serialize();
+    const shapeDataString = JSON.stringify(shapeData);
+    saveJson(shapeDataString, viewer.currentObject.name);
+  });
+
+  importButton.addEventListener("click", () => {
+    importFileInput.addEventListener(
+      "change",
+      async () => {
+        if (!importFileInput.value) return;
+
+        const file = importFileInput.files[0];
+
+        const rawData = await file.text();
+        const data = JSON.parse(rawData);
+        const { type } = data;
+
+        let shape: Shape;
+
+        switch (type) {
+          case "line":
+            shape = Line.deserialize(data);
+            break;
+          case "square":
+            shape = Square.deserialize(data);
+            break;
+          case "rectangle":
+            shape = Rectangle.deserialize(data);
+            break;
+          case "polygon":
+            shape = Polygon.deserialize(data);
+        }
+
+        console.log(shape);
+
+        viewer.addObject(shape);
+        importFileInput.value = null;
+      },
+      {
+        once: true,
+      }
+    );
+
+    importFileInput.click();
+  });
+}
+
+function saveJson(data: string, name: string) {
+  const blob = new Blob([data], { type: "application/json" });
+  const anchor = window.document.createElement("a");
+  anchor.href = window.URL.createObjectURL(blob);
+  anchor.download = name;
+  document.body.appendChild(anchor);
+  anchor.click();
+  document.body.removeChild(anchor);
 }

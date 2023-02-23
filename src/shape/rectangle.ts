@@ -1,8 +1,8 @@
 import { Transform } from "../geometry/transform";
-import { Vector2 } from "../geometry/vector";
+import { Vector2, Vector3 } from "../geometry/vector";
 import { Vertex } from "../geometry/vertex";
 import { DEFAULT_SHAPE_COLOR } from "../util";
-import { Shape } from "./shape";
+import { Shape, ShapeData } from "./shape";
 
 type Quadrant = 0 | 1 | 2 | 3;
 
@@ -30,6 +30,27 @@ class Rectangle extends Shape {
     super(transform);
     this.initVertices();
     this.needUpdate = true;
+  }
+
+  static deserialize(data: ShapeData): Rectangle {
+    const rawTransform = data.transform;
+    const transform = Transform.deserialize(rawTransform);
+    const { vertices } = data;
+    const vertex1Pos = Vector2.deserialize(vertices[0].position);
+    const vertex3Pos = Vector2.deserialize(vertices[2].position);
+
+    const rectangle = Rectangle.fromCorner(vertex1Pos);
+    rectangle.setNextCorner(vertex3Pos);
+    rectangle.finalize();
+    rectangle.translate(transform.position);
+    rectangle.rotate(transform.rotation);
+    rectangle.scale(transform.scale);
+
+    for (let i = 0; i < 4; i++) {
+      rectangle.vertices[i].color = Vector3.deserialize(vertices[i].color);
+    }
+
+    return rectangle;
   }
 
   static fromCorner(position: Vector2): Rectangle {
@@ -132,6 +153,10 @@ class Rectangle extends Shape {
     const vertex1 = this.vertices[0];
     const vertex3 = this.vertices[2];
     return Vector2.between(point, vertex1.globalCoord, vertex3.globalCoord);
+  }
+
+  override type(): string {
+    return "rectangle";
   }
 }
 

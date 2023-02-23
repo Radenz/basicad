@@ -1,6 +1,6 @@
-import { Transform } from "../geometry/transform";
+import { Transform, TransformData } from "../geometry/transform";
 import { Vector2, Vector3 } from "../geometry/vector";
-import { Vertex } from "../geometry/vertex";
+import { Vertex, VertexData } from "../geometry/vertex";
 
 abstract class Shape {
   protected _vertices: Vertex[] = [];
@@ -27,6 +27,21 @@ abstract class Shape {
   abstract drawMode(context: WebGLRenderingContext): number;
 
   abstract isInsideClickArea(point: Vector2): boolean;
+
+  abstract type(): string;
+
+  serialize(): ShapeData {
+    const name = this.name;
+    const type = this.type();
+    const vertices = this._vertices.map((vertex) => vertex.serialize());
+
+    return {
+      name,
+      type,
+      transform: this.transform.serialize(),
+      vertices,
+    };
+  }
 
   get data(): number[] {
     if (this.needUpdate)
@@ -110,4 +125,11 @@ abstract class Shape {
   }
 }
 
-export { Shape };
+interface ShapeData {
+  name: string;
+  type: string;
+  transform: TransformData;
+  vertices: VertexData[];
+}
+
+export { Shape, ShapeData };

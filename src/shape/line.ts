@@ -1,6 +1,6 @@
-import { Shape } from "./shape";
+import { Shape, ShapeData } from "./shape";
 import { Transform } from "../geometry/transform";
-import { Vector2 } from "../geometry/vector";
+import { Vector2, Vector3 } from "../geometry/vector";
 import { Vertex } from "../geometry/vertex";
 import { DEFAULT_SHAPE_COLOR, LINE_CLICK_RANGE } from "../util";
 
@@ -11,6 +11,25 @@ class Line extends Shape {
     super(transform);
     this.initVertices();
     this.needUpdate = true;
+  }
+
+  static deserialize(data: ShapeData): Line {
+    const transform = Transform.deserialize(data.transform);
+    const { vertices } = data;
+    const vertex1Pos = Vector2.deserialize(vertices[0].position);
+    const vertex2Pos = Vector2.deserialize(vertices[1].position);
+    const vertex1Color = Vector3.deserialize(vertices[0].color);
+    const vertex2Color = Vector3.deserialize(vertices[1].color);
+    const line = Line.fromStart(vertex1Pos);
+    line.setNextPoint(vertex2Pos);
+    line.finalize();
+    line.vertices[0].color = vertex1Color;
+    line.vertices[1].color = vertex2Color;
+    line.translate(transform.position);
+    line.rotate(transform.rotation);
+    line.scale(transform.scale);
+
+    return line;
   }
 
   static fromStart(position: Vector2): Line {
@@ -89,6 +108,10 @@ class Line extends Shape {
       point.distanceTo([vertex1.globalCoord, vertex2.globalCoord]) <=
       LINE_CLICK_RANGE
     );
+  }
+
+  override type(): string {
+    return "line";
   }
 }
 

@@ -10,6 +10,14 @@ class Vector2 {
 
   constructor(private _x: number, private _y: number) {}
 
+  serialize(): [number, number] {
+    return [this._x, this._y];
+  }
+
+  static deserialize(data: number[]): Vector2 {
+    return new Vector2(data[0], data[1]);
+  }
+
   static get zero() {
     return new Vector2(0, 0);
   }
@@ -182,6 +190,14 @@ class Vector3 {
   }
 
   constructor(private _x: number, private _y: number, private _z: number) {}
+
+  serialize(): [number, number, number] {
+    return [this._x, this._y, this._z];
+  }
+
+  static deserialize(data: number[]): Vector3 {
+    return new Vector3(data[0], data[1], data[2]);
+  }
 
   static mix(a: Vector3, b: Vector3, factor: number): Vector3 {
     if (factor < 0) factor = 0;
