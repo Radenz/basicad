@@ -2,6 +2,7 @@ import { Transform } from "../geometry/transform";
 import { Vector2, Vector3 } from "../geometry/vector";
 import { Vertex } from "../geometry/vertex";
 import { DEFAULT_SHAPE_COLOR } from "../util";
+import { Polygon } from "./polygon";
 import { Shape, ShapeData } from "./shape";
 
 type Quadrant = 0 | 1 | 2 | 3;
@@ -150,9 +151,14 @@ class Rectangle extends Shape {
   }
 
   override isInsideClickArea(point: Vector2): boolean {
-    const vertex1 = this.vertices[0];
-    const vertex3 = this.vertices[2];
-    return Vector2.between(point, vertex1.globalCoord, vertex3.globalCoord);
+    const vertex1Pos = this.vertices[0].globalCoord;
+    const vertex2Pos = this.vertices[1].globalCoord;
+    const vertex3Pos = this.vertices[2].globalCoord;
+    const vertex4Pos = this.vertices[3].globalCoord;
+    return (
+      Polygon.isInTriangle(point, vertex1Pos, vertex2Pos, vertex3Pos) ||
+      Polygon.isInTriangle(point, vertex1Pos, vertex4Pos, vertex3Pos)
+    );
   }
 
   override type(): string {
