@@ -68,13 +68,17 @@ class Polygon extends Shape {
 
   finalize() {
     this.constructing = false;
-    const center = this.center.add(this.transform.position);
+    const center = this.center;
+    center.scale(this.transform.scale);
+    center.rotate(this.transform.rotation, Vector2.zero);
+    const centerPos = center.add(this.transform.position);
+
     const displacement = this.center;
     displacement.scale(-1);
     this.vertices.forEach((vertex) => {
       vertex.position.set(displacement.add(vertex.position));
     });
-    this.transform.position.set(center);
+    this.transform.position.set(centerPos);
     this.needUpdate = true;
   }
 
@@ -502,6 +506,7 @@ class Polygon extends Shape {
 
   // ? Actions
   repositionOrigin() {
+    const scale = this.transform.scale;
     this.finalize();
   }
 
