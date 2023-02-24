@@ -64,6 +64,14 @@ class Viewer {
     return this.selected;
   }
 
+  get currentMode(): Mode {
+    return this.mode;
+  }
+
+  get currentVertex(): Vertex {
+    return this.selectedVertex;
+  }
+
   async setup() {
     this.context.clearColor(CLEAR_COLOR.x, CLEAR_COLOR.y, CLEAR_COLOR.z, 1.0);
 
