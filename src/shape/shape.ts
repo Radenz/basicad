@@ -51,7 +51,7 @@ abstract class Shape {
   }
 
   get name(): string {
-    return "Shape";
+    return "Polygon";
   }
 
   get isHighlighted(): boolean {
@@ -137,3 +137,4 @@ interface ShapeData {
 }
 
 export { Shape, ShapeData };
+
