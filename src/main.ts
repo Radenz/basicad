@@ -86,11 +86,7 @@ function setupButtons(viewer: Viewer) {
   ) as HTMLInputElement;
   importFileInput.addEventListener("input", () => {});
 
-  const colorRInput = document.getElementById("color-r") as HTMLInputElement;
-  const colorGInput = document.getElementById("color-g") as HTMLInputElement;
-  const colorBInput = document.getElementById("color-b") as HTMLInputElement;
   const colorInput = document.getElementById("color-all") as HTMLInputElement;
-  const applyColorButton = document.getElementById("apply-color");
   const lengthInput = document.getElementById("length") as HTMLInputElement;
   const lengthPreview = document.getElementById("length-preview");
 
@@ -174,30 +170,16 @@ function setupButtons(viewer: Viewer) {
     viewer.currentObject.flipNormal();
   });
 
-  applyColorButton.addEventListener("click", () => {
+  colorInput.addEventListener("input", () => {
     if (!viewer.currentObject) return;
     if (viewer.currentMode == "edit" && !viewer.currentVertex) return;
 
-    const r = parseInt(colorRInput.value);
-    const g = parseInt(colorGInput.value);
-    const b = parseInt(colorBInput.value);
+    const colorString = colorInput.value;
+    const r = parseInt(colorString.slice(1, 3), 16);
+    const g = parseInt(colorString.slice(3, 5), 16);
+    const b = parseInt(colorString.slice(5, 7), 16);
 
-    if (isNaN(r) || isNaN(g) || isNaN(b)) {
-      // get from color input
-      const colorString = colorInput.value;
-      const r = parseInt(colorString.slice(1, 3), 16);
-      const g = parseInt(colorString.slice(3, 5), 16);
-      const b = parseInt(colorString.slice(5, 7), 16);
-
-      if (isNaN(r) || isNaN(g) || isNaN(b)) return;
-
-      const color = Color.rgb(r, g, b);
-
-      if (viewer.currentMode == "edit") viewer.currentVertex.color = color;
-      else viewer.currentObject.setVerticesColor(color);
-      return;
-    }
-
+    if (isNaN(r) || isNaN(g) || isNaN(b)) return;
     const color = Color.rgb(r, g, b);
 
     if (viewer.currentMode == "edit") viewer.currentVertex.color = color;

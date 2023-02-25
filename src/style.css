@@ -1,148 +1,163 @@
 html,
 body {
-	margin: 0;
-	padding: 0;
-	overflow: hidden;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
 body {
-	position: relative;
-	background-color: rgb(64, 64, 64);
+  position: relative;
+  background-color: rgb(64, 64, 64);
 }
 
 canvas {
-	box-sizing: border-box;
-	margin: 0;
-	margin-top: calc(50vh - 40vw);
-	height: 80vw;
-	width: 80vw;
-	padding: 0;
+  box-sizing: border-box;
+  margin: 0;
+  margin-top: calc(50vh - 40vw);
+  height: 80vw;
+  width: 80vw;
+  padding: 0;
 }
 
 li {
-	list-style-type: none;
+  list-style-type: none;
 }
 
 .flex {
-	display: flex;
+  display: flex;
+}
+
+.flex.full {
+  padding: 0px 4px;
+  align-items: center;
+  width: calc(100% - 8px);
+  gap: 8px;
+}
+
+.flex.justify {
+  justify-content: space-between;
+}
+
+#color-all {
+  flex-grow: 1;
 }
 
 .material-symbols-rounded {
-	font-variation-settings: "FILL" 0, "wght" 300, "GRAD" 0, "opsz" 48;
+  font-variation-settings: "FILL" 0, "wght" 300, "GRAD" 0, "opsz" 48;
 }
 
 .material-symbols-rounded.fill {
-	font-variation-settings: "FILL" 1, "wght" 300, "GRAD" 0, "opsz" 48;
-	color: gray;
+  font-variation-settings: "FILL" 1, "wght" 300, "GRAD" 0, "opsz" 48;
+  color: gray;
 }
 
 #canvas-container {
-	height: calc(100vh - 8px);
-	box-sizing: border-box;
-	overflow: hidden;
-	border-radius: 4px;
-	position: relative;
+  height: calc(100vh - 8px);
+  box-sizing: border-box;
+  overflow: hidden;
+  border-radius: 4px;
+  position: relative;
 }
 
 #editor-panel {
-	height: calc(100vh - 8px);
-	flex-grow: 1;
-	display: flex;
-	flex-direction: column;
-	gap: 4px;
+  height: calc(100vh - 8px);
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 #collection-panel {
-	height: calc(40vh - 6px);
-	background-color: rgb(128, 128, 128);
-	border-radius: 4px;
-	overflow-y: auto;
+  height: calc(40vh - 6px);
+  background-color: rgb(128, 128, 128);
+  border-radius: 4px;
+  overflow-y: auto;
 }
 
 #properties-panel {
-	height: calc(60vh - 6px);
-	background-color: rgb(128, 128, 128);
-	border-radius: 4px;
-	overflow-y: auto;
+  height: calc(60vh - 6px);
+  background-color: rgb(128, 128, 128);
+  border-radius: 4px;
+  overflow-y: auto;
 }
 
 .shape-btn-container {
-	position: absolute;
-	top: 8px;
-	left: 8px;
-	display: flex;
-	gap: 8px;
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  display: flex;
+  gap: 8px;
 }
 
 .custom-shape-btn-container {
-	position: absolute;
-	top: 40px;
-	left: 8px;
-	display: flex;
-	gap: 8px;
+  position: absolute;
+  top: 40px;
+  left: 8px;
+  display: flex;
+  gap: 8px;
 }
 
 .viewmode-btn-container {
-	position: absolute;
-	bottom: 8px;
-	left: 8px;
-	display: flex;
-	gap: 8px;
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  display: flex;
+  gap: 8px;
 }
 
 .mod-btn-container {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 8px;
-	margin: 4px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 4px;
 }
 
 .hud-btn,
 .mod-btn {
-	display: flex;
-	cursor: pointer;
-	align-items: center;
-	justify-content: center;
-	border-radius: 4px;
-	padding: 2px;
-	border: 0px;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  padding: 2px;
+  border: 0px;
 }
 
 .mod-btn {
-	font-size: 12px;
-	font-family: "Public Sans";
-	color: white;
-	text-shadow: 0 0 2px black;
-	background-color: rgba(0, 0, 0, 0.3);
-	padding: 4px;
+  font-size: 12px;
+  font-family: "Public Sans";
+  color: white;
+  text-shadow: 0 0 2px black;
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 4px;
 }
 
 .hud-btn span {
-	font-size: 20px;
+  font-size: 20px;
 }
 
 #basicad {
-	display: flex;
-	margin: 4px;
-	gap: 4px;
+  display: flex;
+  margin: 4px;
+  gap: 4px;
 }
 
 #mode,
 #action {
-	font-size: 14px;
-	font-family: "Public Sans";
-	text-shadow: 0 0 2px black;
-	color: white;
+  font-size: 14px;
+  font-family: "Public Sans";
+  text-shadow: 0 0 2px black;
+  color: white;
 }
 
 #action {
-	position: absolute;
-	top: 8px;
-	right: 8px;
+  position: absolute;
+  top: 8px;
+  right: 8px;
 }
 
 #import-file {
-	display: none;
+  display: none;
 }
 
 h1,
@@ -151,42 +166,78 @@ h3,
 h4,
 h5,
 h6 {
-	font-family: "Public Sans";
-	margin: 0;
-	color: white;
-	text-shadow: 0 0 2px black;
+  font-family: "Public Sans";
+  margin: 0;
+  color: white;
+  text-shadow: 0 0 2px black;
 }
 
 h4 {
-	font-size: 13px;
-	font-weight: 400;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+h5 {
+  font-size: 12px;
+  font-weight: 400;
+  text-shadow: 0 0 4px black;
 }
 
 .panel-title {
-	background-color: rgba(0, 0, 0, 0.4);
-	padding: 4px;
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 4px;
 }
 
 .object-name {
-	font-family: "Public Sans";
-	font-size: 12px;
-	color: white;
-	font-weight: 400;
-	padding: 2px 8px;
+  font-family: "Public Sans";
+  font-size: 12px;
+  color: white;
+  font-weight: 400;
+  padding: 2px 8px;
 }
 
 .object-name:nth-child(odd) {
-	background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.3);
 }
 
 .object-name:nth-child(even) {
-	background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 .object-name.selected {
-	color: rgb(255, 145, 0);
+  color: rgb(255, 145, 0);
 }
 
 .object-name.hidden {
-	opacity: 0.6;
+  opacity: 0.6;
+}
+
+input[type="color"] {
+  appearance: none;
+  padding: 0;
+  background-color: transparent;
+  height: 24px;
+  border: 0;
+}
+
+.prop-capsule {
+  display: inline-flex;
+  align-items: stretch;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin: 4px 0;
+  overflow: hidden;
+  height: 20px;
+}
+
+.prop-name {
+  padding: 3px 8px 2px 8px;
+  vertical-align: center;
+}
+
+.prop-value {
+  vertical-align: center;
+  padding: 3.5px 8px 2px 8px;
+  background-color: rgba(128, 128, 128, 0.5);
 }

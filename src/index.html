@@ -19,43 +19,69 @@
       <div id="canvas-container">
         <canvas id="canvas" width="1920" height="1920"> </canvas>
         <div class="shape-btn-container">
-          <h3>Add shape (Dialog): </h3>
           <button id="line" class="hud-btn">
-            <span class="material-symbols-rounded fill" title="Add line (dialog)">pen_size_2</span>
+            <span
+              class="material-symbols-rounded fill"
+              title="Add line (dialog)"
+              >pen_size_2</span
+            >
           </button>
           <button id="square" class="hud-btn">
-            <span class="material-symbols-rounded fill" title="Add square (dialog)">square</span>
+            <span
+              class="material-symbols-rounded fill"
+              title="Add square (dialog)"
+              >square</span
+            >
           </button>
           <button id="rect" class="hud-btn">
-            <span class="material-symbols-rounded fill" title="Add rectangle (dialog)">rectangle</span>
+            <span
+              class="material-symbols-rounded fill"
+              title="Add rectangle (dialog)"
+              >rectangle</span
+            >
           </button>
           <button id="poly" class="hud-btn">
-            <span class="material-symbols-rounded fill" title="Add polygon (dialog)">pentagon</span>
+            <span
+              class="material-symbols-rounded fill"
+              title="Add polygon (dialog)"
+              >pentagon</span
+            >
           </button>
           <div id="mode">Object mode</div>
         </div>
         <div class="custom-shape-btn-container">
-          <h3>Add shape (Interactive): </h3>
           <button id="line-custom" class="hud-btn">
-            <span class="material-symbols-rounded" title="Add line">pen_size_2</span>
+            <span class="material-symbols-rounded" title="Add line"
+              >pen_size_2</span
+            >
           </button>
           <button id="square-custom" class="hud-btn">
-            <span class="material-symbols-rounded" title="Add square">square</span>
+            <span class="material-symbols-rounded" title="Add square"
+              >square</span
+            >
           </button>
           <button id="rect-custom" class="hud-btn">
-            <span class="material-symbols-rounded" title="Add rectangle">rectangle</span>
+            <span class="material-symbols-rounded" title="Add rectangle"
+              >rectangle</span
+            >
           </button>
           <button id="poly-custom" class="hud-btn">
-            <span class="material-symbols-rounded" title="Add polygon">pentagon</span>
+            <span class="material-symbols-rounded" title="Add polygon"
+              >pentagon</span
+            >
           </button>
         </div>
         <div id="action"></div>
         <div class="viewmode-btn-container">
           <button id="solid" class="hud-btn">
-            <span class="material-symbols-rounded fill" title="Color mode">circle</span>
+            <span class="material-symbols-rounded fill" title="Color mode"
+              >circle</span
+            >
           </button>
           <button id="wireframe" class="hud-btn">
-            <span class="material-symbols-rounded" title="Wireframe mode">circle</span>
+            <span class="material-symbols-rounded" title="Wireframe mode"
+              >circle</span
+            >
           </button>
         </div>
       </div>
@@ -67,29 +93,70 @@
         <div id="properties-panel">
           <h4 class="panel-title">Properties</h4>
           <div class="properties-container">
-            <div class="flex">
-              <div>
-                <div>R</div>
-                <input id="color-r" type="text" size="3" />
-              </div>
-              <div>
-                <div>G</div>
-                <input id="color-g" type="text" size="3" />
-              </div>
-              <div>
-                <div>B</div>
-                <input id="color-b" type="text" size="3"/>
-              </div>
+            <div class="flex full">
+              <h5>Color</h5>
+              <input id="color-all" class="mod-btn" type="color" />
             </div>
-            <div class="flex">
-              Change color:
-              <input id="color-all" type="color">
-            </div>
-            <button id="apply-color" class="mod-btn">Apply</button>
             <div id="line-properties">
-              Change length: <span id="length-preview"></span>
-              <div>
-                0 <input type="range" id="length" min="0.1" max="1" value="0.5" step="0.1" /> 1
+              <div class="flex full justify">
+                <div class="prop-capsule">
+                  <h5 class="prop-name">Length</h5>
+                  <h6 id="length-preview" class="prop-value">0.5</h6>
+                </div>
+                <input
+                  type="range"
+                  id="length"
+                  min="0.001"
+                  max="3"
+                  value="0.5"
+                  step="0.001"
+                />
+              </div>
+            </div>
+            <div id="square-properties">
+              <div class="flex full justify">
+                <div class="prop-capsule">
+                  <h5 class="prop-name">Size</h5>
+                  <h6 id="size-preview" class="prop-value">0.5</h6>
+                </div>
+                <input
+                  type="range"
+                  id="size"
+                  min="0.001"
+                  max="3"
+                  value="0.5"
+                  step="0.001"
+                />
+              </div>
+            </div>
+            <div id="rectangle-properties">
+              <div class="flex full justify">
+                <div class="prop-capsule">
+                  <h5 class="prop-name">Length</h5>
+                  <h6 id="rectangle-length-preview" class="prop-value">0.5</h6>
+                </div>
+                <input
+                  type="range"
+                  id="rectangle-length"
+                  min="0.001"
+                  max="3"
+                  value="0.5"
+                  step="0.001"
+                />
+              </div>
+              <div class="flex full justify">
+                <div class="prop-capsule">
+                  <h5 class="prop-name">Width</h5>
+                  <h6 id="rectangle-width-preview" class="prop-value">0.5</h6>
+                </div>
+                <input
+                  type="range"
+                  id="rectangle-width"
+                  min="0.001"
+                  max="3"
+                  value="0.5"
+                  step="0.001"
+                />
               </div>
             </div>
           </div>
