@@ -280,20 +280,7 @@ function setupButtons(viewer: Viewer) {
     importFileInput.click();
   });
 
-  viewer.onSelectedShapeUpdated((object) => {
-    if (object instanceof Line) {
-      lineLengthPreview.innerText = object.length.toFixed(3);
-    }
-
-    if (object instanceof Square) {
-      squareSizePreview.innerText = object.size.toFixed(3);
-    }
-
-    if (object instanceof Rectangle) {
-      rectangleLengthPreview.innerText = object.length.toFixed(3);
-      rectangleWidthPreview.innerText = object.width.toFixed(3);
-    }
-  });
+  viewer.onSelectedShapeUpdated(synchronizeProperties);
 
   viewer.onShapeSelected((object) => {
     properties.forEach((property) =>
@@ -311,7 +298,28 @@ function setupButtons(viewer: Viewer) {
     if (object instanceof Rectangle) {
       rectangleProperties.style.removeProperty("display");
     }
+
+    synchronizeProperties(object);
   });
+
+  function synchronizeProperties(object: Shape) {
+    if (object instanceof Line) {
+      lineLengthPreview.innerText = object.length.toFixed(3);
+      lineLengthInput.value = object.length.toFixed(3);
+    }
+
+    if (object instanceof Square) {
+      squareSizePreview.innerText = object.size.toFixed(3);
+      squareSizeInput.value = object.size.toFixed(3);
+    }
+
+    if (object instanceof Rectangle) {
+      rectangleLengthPreview.innerText = object.length.toFixed(3);
+      rectangleWidthPreview.innerText = object.width.toFixed(3);
+      rectangleLengthInput.value = object.length.toFixed(3);
+      rectangleWidthInput.value = object.width.toFixed(3);
+    }
+  }
 }
 
 function saveJson(data: string, name: string) {
