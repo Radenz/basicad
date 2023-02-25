@@ -88,8 +88,31 @@ function setupButtons(viewer: Viewer) {
   importFileInput.addEventListener("input", () => {});
 
   const colorInput = document.getElementById("color-all") as HTMLInputElement;
-  const lineLengthInput = document.getElementById("length") as HTMLInputElement;
-  const lineLengthPreview = document.getElementById("length-preview");
+  const lineLengthInput = document.getElementById(
+    "line-length"
+  ) as HTMLInputElement;
+  const lineLengthPreview = document.getElementById("line-length-preview");
+  const squareSizeInput = document.getElementById(
+    "square-size"
+  ) as HTMLInputElement;
+  const squareSizePreview = document.getElementById("square-size-preview");
+  const rectangleLengthInput = document.getElementById(
+    "length"
+  ) as HTMLInputElement;
+  const rectangleLengthPreview = document.getElementById(
+    "rectangle-length-preview"
+  );
+  const rectangleWidthInput = document.getElementById(
+    "rectangle-width"
+  ) as HTMLInputElement;
+  const rectangleWidthPreview = document.getElementById(
+    "rectangle-width-preview"
+  );
+
+  const lineProperties = document.getElementById("line-properties");
+  const squareProperties = document.getElementById("square-properties");
+  const rectangleProperties = document.getElementById("rectangle-properties");
+  const properties = [lineProperties, squareProperties, rectangleProperties];
 
   viewer.onModeChanged = (mode) => {
     modeDisplay.innerText = `${mode === "object" ? "Object" : "Edit"} mode`;
@@ -229,8 +252,6 @@ function setupButtons(viewer: Viewer) {
             shape = Polygon.deserialize(data);
         }
 
-        console.log(shape);
-
         viewer.addObject(shape);
         importFileInput.value = null;
       },
@@ -243,9 +264,35 @@ function setupButtons(viewer: Viewer) {
   });
 
   viewer.onSelectedShapeUpdated((object) => {
-    // TODO: update properties
     if (object instanceof Line) {
       lineLengthPreview.innerText = object.length.toFixed(3);
+    }
+
+    if (object instanceof Square) {
+      squareSizePreview.innerText = object.size.toFixed(3);
+    }
+
+    if (object instanceof Rectangle) {
+      rectangleLengthPreview.innerText = object.length.toFixed(3);
+      rectangleWidthPreview.innerText = object.width.toFixed(3);
+    }
+  });
+
+  viewer.onShapeSelected((object) => {
+    properties.forEach((property) =>
+      property.style.setProperty("display", "none")
+    );
+
+    if (object instanceof Line) {
+      lineProperties.style.removeProperty("display");
+    }
+
+    if (object instanceof Square) {
+      squareProperties.style.removeProperty("display");
+    }
+
+    if (object instanceof Rectangle) {
+      rectangleProperties.style.removeProperty("display");
     }
   });
 }
