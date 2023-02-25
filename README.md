@@ -2,16 +2,14 @@
 
 ## Cara menjalankan program
 
-Requirements:
-
-1. Node.js
+Requirements: Node Package Manager (NPM)
 
 ### Langkah-langkah
 
-1. Install `typescript-bundle`
+1. Install `typescript-bundle` dan `serve`
 
    ```sh
-   npm i -g typescript-bundle
+   npm i -g typescript-bundle serve
    ```
 
 2. Run
@@ -25,6 +23,8 @@ Requirements:
    ```sh
    serve src
    ```
+
+Akan muncul pesan yang berisi alamat IP (localhost) dan port yang dapat diakses untuk menjalankan program.
 
 ## Tipe, Kelas, Fungsi, dan Metode Non-Primitif
 
