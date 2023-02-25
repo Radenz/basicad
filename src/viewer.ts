@@ -47,6 +47,7 @@ class Viewer {
   private shapeListChangedListeners: Listener<Shape[]>[] = [];
   private vertexSelectedListeners: Listener<Vertex>[] = [];
   private actionUpdateListeners: Listener<string>[] = [];
+  private shapeUpdatedListeners: Listener<Shape>[] = [];
 
   constructor(canvas: HTMLCanvasElement) {
     // TODO: Try other contex, add guard
@@ -222,6 +223,10 @@ class Viewer {
 
   onNewAction(listener: Listener<string>) {
     this.actionUpdateListeners.push(listener);
+  }
+
+  onSelectedShapeUpdated(listener: Listener<Shape>) {
+    this.shapeUpdatedListeners.push(listener);
   }
 
   updateAction(action: string) {
@@ -560,6 +565,11 @@ class Viewer {
     this.context.clear(this.context.COLOR_BUFFER_BIT);
     for (const shape of this.shapes) {
       if (shape.isHidden) continue;
+
+      if (shape === this.selected && shape.willUpdate)
+        this.shapeUpdatedListeners.forEach((listener) =>
+          listener(this.selected)
+        );
 
       if (shape.constructing) {
         const data = shape.vertices.map((v) => v.data).flat();

@@ -87,8 +87,8 @@ function setupButtons(viewer: Viewer) {
   importFileInput.addEventListener("input", () => {});
 
   const colorInput = document.getElementById("color-all") as HTMLInputElement;
-  const lengthInput = document.getElementById("length") as HTMLInputElement;
-  const lengthPreview = document.getElementById("length-preview");
+  const lineLengthInput = document.getElementById("length") as HTMLInputElement;
+  const lineLengthPreview = document.getElementById("length-preview");
 
   viewer.onModeChanged = (mode) => {
     modeDisplay.innerText = `${mode === "object" ? "Object" : "Edit"} mode`;
@@ -186,10 +186,10 @@ function setupButtons(viewer: Viewer) {
     else viewer.currentObject.setVerticesColor(color);
   });
 
-  lengthInput.addEventListener("input", () => {
-    lengthPreview.innerText = lengthInput.value;
+  lineLengthInput.addEventListener("input", () => {
+    lineLengthPreview.innerText = lineLengthInput.value;
     if (!(viewer.currentObject instanceof Line)) return;
-    viewer.currentObject.length = parseFloat(lengthInput.value);
+    viewer.currentObject.length = parseFloat(lineLengthInput.value);
   });
 
   exportButton.addEventListener("click", () => {
@@ -239,6 +239,13 @@ function setupButtons(viewer: Viewer) {
     );
 
     importFileInput.click();
+  });
+
+  viewer.onSelectedShapeUpdated((object) => {
+    // TODO: update properties
+    if (object instanceof Line) {
+      lineLengthPreview.innerText = object.length.toFixed(3);
+    }
   });
 }
 

@@ -62,6 +62,10 @@ abstract class Shape {
     return this.hidden;
   }
 
+  get willUpdate(): boolean {
+    return this.needUpdate;
+  }
+
   get vertices(): Vertex[] {
     return this._vertices;
   }
