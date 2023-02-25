@@ -91,6 +91,8 @@ function setupButtons(viewer: Viewer) {
   const colorBInput = document.getElementById("color-b") as HTMLInputElement;
   const colorInput = document.getElementById("color-all") as HTMLInputElement;
   const applyColorButton = document.getElementById("apply-color");
+  const lengthInput = document.getElementById("length") as HTMLInputElement;
+  const lengthPreview = document.getElementById("length-preview");
 
   viewer.onModeChanged = (mode) => {
     modeDisplay.innerText = `${mode === "object" ? "Object" : "Edit"} mode`;
@@ -186,11 +188,11 @@ function setupButtons(viewer: Viewer) {
       const r = parseInt(colorString.slice(1, 3), 16);
       const g = parseInt(colorString.slice(3, 5), 16);
       const b = parseInt(colorString.slice(5, 7), 16);
-      
+
       if (isNaN(r) || isNaN(g) || isNaN(b)) return;
-      
+
       const color = Color.rgb(r, g, b);
-      
+
       if (viewer.currentMode == "edit") viewer.currentVertex.color = color;
       else viewer.currentObject.setVerticesColor(color);
       return;
@@ -200,8 +202,12 @@ function setupButtons(viewer: Viewer) {
 
     if (viewer.currentMode == "edit") viewer.currentVertex.color = color;
     else viewer.currentObject.setVerticesColor(color);
+  });
 
-    
+  lengthInput.addEventListener("input", () => {
+    lengthPreview.innerText = lengthInput.value;
+    if (!(viewer.currentObject instanceof Line)) return;
+    viewer.currentObject.length = parseFloat(lengthInput.value);
   });
 
   exportButton.addEventListener("click", () => {
