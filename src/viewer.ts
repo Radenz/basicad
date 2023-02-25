@@ -40,6 +40,8 @@ class Viewer {
   private canvas: HTMLCanvasElement;
   onModeChanged: Nullable<(mode: Mode) => void> = null;
 
+  private isCreating = false;
+
   private originCache: number[] = [];
   private originCachePosition: Vector2 = new Vector2(0, 0);
 
@@ -230,6 +232,8 @@ class Viewer {
   }
 
   updateAction(action: string) {
+    this.isCreating = !!action;
+
     this.actionUpdateListeners.forEach((listener) => listener(action));
   }
 
@@ -287,6 +291,8 @@ class Viewer {
   }
 
   onClick(event: MouseEvent) {
+    if (this.isCreating) return;
+
     if (event.ctrlKey) return this.onCtrlClick(event);
 
     this.mode === "object"
