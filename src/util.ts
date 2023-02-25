@@ -34,6 +34,16 @@ const G = POSITION_SIZE + 1;
 const B = POSITION_SIZE + 2;
 const FRAME_DELTA_TIME = 1000 / FPS;
 
+const onNextFrame =
+  window.requestAnimationFrame.bind(window) ||
+  window["webkitRequestAnimationFrame"].bind(window) ||
+  window["mozRequestAnimationFrame"].bind(window) ||
+  window["oRequestAnimationFrame"].bind(window) ||
+  window["msRequestAnimationFrame"].bind(window) ||
+  function (callback: () => any) {
+    window.setTimeout(callback, FRAME_DELTA_TIME);
+  };
+
 export {
   Nullable,
   Listener,
@@ -55,4 +65,5 @@ export {
   CLEAR_COLOR,
   ORANGE,
   DEFAULT_SHAPE_COLOR,
+  onNextFrame,
 };

@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // window["sq"] = sq;
   // window["ln"] = ln;
   // window["rect"] = rect;
+  window["canvas"] = canvas;
   window["viewer"] = viewer;
   window["Polygon"] = Polygon;
 

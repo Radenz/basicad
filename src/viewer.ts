@@ -16,6 +16,7 @@ import {
   G,
   Listener,
   Nullable,
+  onNextFrame,
   ORANGE,
   ORIGIN_CURSOR_RADIUS,
   PARENT_POSITION_INDEX,
@@ -52,9 +53,8 @@ class Viewer {
   private shapeUpdatedListeners: Listener<Shape>[] = [];
 
   constructor(canvas: HTMLCanvasElement) {
-    // TODO: Try other contex, add guard
-    this.context = canvas.getContext("webgl")!;
     this.canvas = canvas;
+    this.initializeContext();
     this.shapes = [];
     this.context.viewport(0, 0, canvas.width, canvas.height);
 
@@ -73,6 +73,20 @@ class Viewer {
 
   get currentVertex(): Vertex {
     return this.selectedVertex;
+  }
+
+  initializeContext() {
+    const context = (this.canvas.getContext("webgl") ||
+      this.canvas.getContext("experimental-webgl") ||
+      this.canvas.getContext("webkit-3d") ||
+      this.canvas.getContext("moz-webgl")) as WebGLRenderingContext;
+
+    if (context === null) {
+      alert("WebGL is not supported. Please use a different browser");
+      throw "WebGL is not supported. Please use a different browser";
+    }
+
+    this.context = context;
   }
 
   async setup() {
@@ -163,11 +177,7 @@ class Viewer {
     this.context.enableVertexAttribArray(vParentRotationAttribute);
     this.context.enableVertexAttribArray(vParentScaleAttribute);
 
-    console.log(this.context.getShaderInfoLog(vertexShader));
-    console.log(this.context.getShaderInfoLog(fragmentShader));
-
     this.context.useProgram(program);
-    // console.log(this.context.getProgramInfoLog(program));
   }
 
   setupEventListeners() {
@@ -563,8 +573,7 @@ class Viewer {
   }
 
   start() {
-    // TODO: Support vendor specific
-    window.requestAnimationFrame(this.render.bind(this));
+    onNextFrame(this.render.bind(this));
   }
 
   render() {
@@ -645,7 +654,7 @@ class Viewer {
       this.drawPoint(this.selectedVertex, ORANGE);
     }
 
-    window.requestAnimationFrame(this.render.bind(this));
+    onNextFrame(this.render.bind(this));
   }
 
   getOriginData(position: Vector2): number[] {
