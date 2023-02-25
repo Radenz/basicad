@@ -1,5 +1,4 @@
 import { Color } from "./color";
-import { Vector3 } from "./geometry/vector";
 import { Line } from "./shape/line";
 import { Polygon } from "./shape/polygon";
 import { Rectangle } from "./shape/rectangle";
@@ -87,10 +86,11 @@ function setupButtons(viewer: Viewer) {
   ) as HTMLInputElement;
   importFileInput.addEventListener("input", () => {});
 
-  const colorRInput = document.getElementById("color-r") as HTMLInputElement
-  const colorGInput = document.getElementById("color-g") as HTMLInputElement
-  const colorBInput = document.getElementById("color-b") as HTMLInputElement
-  const applyColorButton = document.getElementById("apply-color")
+  const colorRInput = document.getElementById("color-r") as HTMLInputElement;
+  const colorGInput = document.getElementById("color-g") as HTMLInputElement;
+  const colorBInput = document.getElementById("color-b") as HTMLInputElement;
+  const colorInput = document.getElementById("color-all") as HTMLInputElement;
+  const applyColorButton = document.getElementById("apply-color");
 
   viewer.onModeChanged = (mode) => {
     modeDisplay.innerText = `${mode === "object" ? "Object" : "Edit"} mode`;
@@ -171,32 +171,38 @@ function setupButtons(viewer: Viewer) {
     if (!(viewer.currentObject instanceof Polygon)) return;
     viewer.currentObject.flipNormal();
   });
-  
+
   applyColorButton.addEventListener("click", () => {
-    if (!viewer.currentObject) return
-    if (viewer.currentMode == "edit" && !viewer.currentVertex) return
+    if (!viewer.currentObject) return;
+    if (viewer.currentMode == "edit" && !viewer.currentVertex) return;
+
+    const r = parseInt(colorRInput.value);
+    const g = parseInt(colorGInput.value);
+    const b = parseInt(colorBInput.value);
+
+    if (isNaN(r) || isNaN(g) || isNaN(b)) {
+      // get from color input
+      const colorString = colorInput.value;
+      const r = parseInt(colorString.slice(1, 3), 16);
+      const g = parseInt(colorString.slice(3, 5), 16);
+      const b = parseInt(colorString.slice(5, 7), 16);
+      
+      if (isNaN(r) || isNaN(g) || isNaN(b)) return;
+      
+      const color = Color.rgb(r, g, b);
+      
+      if (viewer.currentMode == "edit") viewer.currentVertex.color = color;
+      else viewer.currentObject.setVerticesColor(color);
+      return;
+    }
+
+    const color = Color.rgb(r, g, b);
+
+    if (viewer.currentMode == "edit") viewer.currentVertex.color = color;
+    else viewer.currentObject.setVerticesColor(color);
+
     
-    const rawR = colorRInput.value;
-    const rawG = colorGInput.value;
-    const rawB = colorBInput.value;
-
-    const r = parseInt(rawR);
-    const g = parseInt(rawG);
-    const b = parseInt(rawB);
-
-    if (isNaN(r) || isNaN(g) || isNaN(b)) return;
-
-    console.log(r, g, b)
-
-    const color = Color.rgb(r, g, b)
-
-    console.log(color)
-
-    if (viewer.currentMode == "edit")
-      viewer.currentVertex.color = color
-    else
-      viewer.currentObject.setVerticesColor(color)
-  })
+  });
 
   exportButton.addEventListener("click", () => {
     if (!viewer.currentObject) return;
