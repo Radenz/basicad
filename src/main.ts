@@ -97,7 +97,7 @@ function setupButtons(viewer: Viewer) {
   ) as HTMLInputElement;
   const squareSizePreview = document.getElementById("square-size-preview");
   const rectangleLengthInput = document.getElementById(
-    "length"
+    "rectangle-length"
   ) as HTMLInputElement;
   const rectangleLengthPreview = document.getElementById(
     "rectangle-length-preview"
@@ -108,6 +108,9 @@ function setupButtons(viewer: Viewer) {
   const rectangleWidthPreview = document.getElementById(
     "rectangle-width-preview"
   );
+
+  console.log(rectangleLengthPreview);
+  console.log(rectangleWidthPreview);
 
   const lineProperties = document.getElementById("line-properties");
   const squareProperties = document.getElementById("square-properties");
@@ -211,9 +214,23 @@ function setupButtons(viewer: Viewer) {
   });
 
   lineLengthInput.addEventListener("input", () => {
-    lineLengthPreview.innerText = lineLengthInput.value;
     if (!(viewer.currentObject instanceof Line)) return;
     viewer.currentObject.length = parseFloat(lineLengthInput.value);
+  });
+
+  squareSizeInput.addEventListener("input", () => {
+    if (!(viewer.currentObject instanceof Square)) return;
+    viewer.currentObject.size = parseFloat(squareSizeInput.value);
+  });
+
+  rectangleLengthInput.addEventListener("input", () => {
+    if (!(viewer.currentObject instanceof Rectangle)) return;
+    viewer.currentObject.length = parseFloat(rectangleLengthInput.value);
+  });
+
+  rectangleWidthInput.addEventListener("input", () => {
+    if (!(viewer.currentObject instanceof Rectangle)) return;
+    viewer.currentObject.width = parseFloat(rectangleWidthInput.value);
   });
 
   exportButton.addEventListener("click", () => {

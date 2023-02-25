@@ -103,6 +103,14 @@ class Rectangle extends Shape {
     return "Rectangle";
   }
 
+  get length(): number {
+    return this._length;
+  }
+
+  get width(): number {
+    return this._width;
+  }
+
   set length(value: number) {
     const factor = value / this._length;
     this._vertices.forEach((v) => v.scaleX(factor));
