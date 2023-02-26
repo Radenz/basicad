@@ -371,6 +371,13 @@ class Viewer {
     this.selectVertex(minDistance <= 0.02 ? selectedVertex : null);
   }
 
+  renameSelected(name: string) {
+    if (!this.selected) return;
+
+    this.selected.name = name;
+    this.shapeListChangedListeners.forEach((listener) => listener(this.shapes));
+  }
+
   grabSelected() {
     let initialX: number;
     let initialY: number;

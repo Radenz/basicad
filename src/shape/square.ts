@@ -11,6 +11,7 @@ class Square extends Shape {
   constructor(transform: Transform, private _size: number) {
     super(transform);
     this.initVertices();
+    this.name = "Square";
     this.needUpdate = true;
   }
 
@@ -106,10 +107,6 @@ class Square extends Shape {
 
   override type(): string {
     return "square";
-  }
-
-  get name(): string {
-    return "Square";
   }
 
   get size(): number {

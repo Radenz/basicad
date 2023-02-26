@@ -6,6 +6,7 @@ abstract class Shape {
   protected _vertices: Vertex[] = [];
   protected highlight: boolean = false;
   protected hidden: boolean = false;
+  protected _name: string = "";
   constructing = false;
 
   protected dataCache: number[] = [];
@@ -51,7 +52,7 @@ abstract class Shape {
   }
 
   get name(): string {
-    return "Polygon";
+    return this._name;
   }
 
   get isHighlighted(): boolean {
@@ -81,6 +82,10 @@ abstract class Shape {
     this._vertices.forEach((v) => (sum = sum.add(v.position)));
     sum.scale(1 / this._vertices.length);
     return sum;
+  }
+
+  set name(name: string) {
+    this._name = name;
   }
 
   set isHighlighted(value: boolean) {
@@ -137,4 +142,3 @@ interface ShapeData {
 }
 
 export { Shape, ShapeData };
-

@@ -7,6 +7,7 @@ import { Shape, ShapeData } from "./shape";
 class Polygon extends Shape {
   constructor(transform: Transform) {
     super(transform);
+    this.name = "Polygon";
   }
 
   static deserialize(data: ShapeData): Polygon {

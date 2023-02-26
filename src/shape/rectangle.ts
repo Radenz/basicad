@@ -30,6 +30,7 @@ class Rectangle extends Shape {
   ) {
     super(transform);
     this.initVertices();
+    this.name = "Rectangle";
     this.needUpdate = true;
   }
 
@@ -97,10 +98,6 @@ class Rectangle extends Shape {
       v.bind(this);
       v.onChange = (vertex) => this.onVertexChanged(vertex);
     });
-  }
-
-  get name() {
-    return "Rectangle";
   }
 
   get length(): number {

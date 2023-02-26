@@ -10,6 +10,7 @@ class Line extends Shape {
   constructor(transform: Transform, private _length: number) {
     super(transform);
     this.initVertices();
+    this.name = "Line";
     this.needUpdate = true;
   }
 
@@ -77,10 +78,6 @@ class Line extends Shape {
 
   get length() {
     return this._length;
-  }
-
-  override get name() {
-    return "Line";
   }
 
   set length(value) {

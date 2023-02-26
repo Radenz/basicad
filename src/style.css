@@ -34,8 +34,20 @@ li {
   gap: 8px;
 }
 
+.flex.full:nth-child(1) {
+  margin-top: 8px;
+}
+
 .flex.justify {
   justify-content: space-between;
+}
+
+.flex.full input[type="text"] {
+  flex-grow: 1;
+}
+
+.flex.full input[type="text"]:focus {
+  outline: none;
 }
 
 #color-all {

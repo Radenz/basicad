@@ -93,8 +93,9 @@ function setupButtons(viewer: Viewer) {
     "rectangle-width-preview"
   );
 
-  console.log(rectangleLengthPreview);
-  console.log(rectangleWidthPreview);
+  const nameProperty = document.getElementById(
+    "object-name"
+  ) as HTMLInputElement;
 
   const lineProperties = document.getElementById("line-properties");
   const squareProperties = document.getElementById("square-properties");
@@ -197,6 +198,10 @@ function setupButtons(viewer: Viewer) {
     else viewer.currentObject.setVerticesColor(color);
   });
 
+  nameProperty.addEventListener("input", () => {
+    viewer.renameSelected(nameProperty.value);
+  });
+
   lineLengthInput.addEventListener("input", () => {
     if (!(viewer.currentObject instanceof Line)) return;
     viewer.currentObject.length = parseFloat(lineLengthInput.value);
@@ -270,6 +275,8 @@ function setupButtons(viewer: Viewer) {
     properties.forEach((property) =>
       property.style.setProperty("display", "none")
     );
+
+    nameProperty.value = object.name;
 
     if (object instanceof Line) {
       lineProperties.style.removeProperty("display");
