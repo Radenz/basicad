@@ -280,6 +280,8 @@ function setupButtons(viewer: Viewer) {
   viewer.onSelectedShapeUpdated(synchronizeProperties);
 
   viewer.onShapeSelected((object) => {
+    if (object === null) return;
+
     properties.forEach((property) =>
       property.style.setProperty("display", "none")
     );
