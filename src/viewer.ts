@@ -42,6 +42,7 @@ class Viewer {
   onModeChanged: Nullable<(mode: Mode) => void> = null;
 
   private isCreating = false;
+  private isListeningKeyPress = true;
 
   private originCache: number[] = [];
   private originCachePosition: Vector2 = new Vector2(0, 0);
@@ -248,6 +249,8 @@ class Viewer {
   }
 
   onKeyPressed(code: string) {
+    if (!this.isListeningKeyPress) return;
+
     switch (code) {
       case "KeyQ":
         this.setViewMode("solid");
@@ -292,6 +295,8 @@ class Viewer {
   }
 
   onKeyDown(event: KeyboardEvent) {
+    if (!this.isListeningKeyPress) return;
+
     switch (event.code) {
       case "Tab":
         event.preventDefault();
@@ -320,6 +325,14 @@ class Viewer {
       new Vector2(event.clientX, event.clientY)
     );
     vertex.globalCoord = globalCoord;
+  }
+
+  disableKeyPress() {
+    this.isListeningKeyPress = false;
+  }
+
+  enableKeyPress() {
+    this.isListeningKeyPress = true;
   }
 
   trySelectShape(event: MouseEvent) {

@@ -202,6 +202,14 @@ function setupButtons(viewer: Viewer) {
     viewer.renameSelected(nameProperty.value);
   });
 
+  nameProperty.addEventListener("focusin", () => {
+    viewer.disableKeyPress();
+  });
+
+  nameProperty.addEventListener("focusout", () => {
+    viewer.enableKeyPress();
+  });
+
   lineLengthInput.addEventListener("input", () => {
     if (!(viewer.currentObject instanceof Line)) return;
     viewer.currentObject.length = parseFloat(lineLengthInput.value);
