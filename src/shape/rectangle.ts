@@ -52,6 +52,7 @@ class Rectangle extends Shape {
       rectangle.vertices[i].color = Vector3.deserialize(vertices[i].color);
     }
 
+    rectangle.name = data.name;
     return rectangle;
   }
 

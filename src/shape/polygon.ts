@@ -22,6 +22,7 @@ class Polygon extends Shape {
       polygon.addVertex(vertex);
     });
 
+    polygon.name = data.name;
     return polygon;
   }
 

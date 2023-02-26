@@ -33,6 +33,7 @@ class Square extends Shape {
       square.vertices[i].color = Vector3.deserialize(vertices[i].color);
     }
 
+    square.name = data.name;
     return square;
   }
 

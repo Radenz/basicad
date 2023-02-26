@@ -29,7 +29,7 @@ class Line extends Shape {
     line.translate(transform.position);
     line.rotate(transform.rotation);
     line.scale(transform.scale);
-
+    line.name = data.name;
     return line;
   }
 
