@@ -1,30 +1,56 @@
-# basicad
+# Basicad
 
 ## Cara menjalankan program
 
-Requirements: Node Package Manager (NPM)
+### _Requirements_
+- `tsc` atau `tsc-bundle`
+- _Static server_
 
 ### Langkah-langkah
 
-1. Install `typescript-bundle` dan `serve`
+#### Instalasi menggunakan `tsc-bundle`
+1. Instal `typescript-bundle`.
 
    ```sh
-   npm i -g typescript-bundle serve
+   npm i -g typescript-bundle
    ```
 
-2. Run
+2. _Compile_ seluruh _source code_ Typescript menggunakan `tsc-bundle` dengan
+konfigurasi `tsconfig.json`.
 
    ```sh
    tsc-bundle tsconfig.json
    ```
 
-3. Serve
+#### Instalasi menggunakan `tsc`
+1. Instal `typescript`.
 
    ```sh
-   serve src
+   npm i -g typescript
    ```
 
-Akan muncul pesan yang berisi alamat IP (localhost) dan port yang dapat diakses untuk menjalankan program.
+2. _Compile source code_ Typescript yang telah di-_bundle_ menggunakan _command_
+pada file `compile.sh`.
+
+   ```sh
+   sh compile.sh
+   ```
+   
+   atau
+
+   ```sh
+   tsc src/bundled/bundle.ts --outFile src/bundle.js --lib "ESNext,DOM" -t "ESNext"
+   ```
+   
+#### Menjalankan program
+Setelah _source code_ Typescript di-_compile_ menjadi Javascript, jalankan
+HTTP _static server_ pada folder `src`.  
+Berikut adalah contoh cara menjalankan program menggunakan `serve`.
+
+```sh
+npm i -g serve
+serve src
+```
 
 ## Tipe, Kelas, Fungsi, dan Metode Non-Primitif
 
